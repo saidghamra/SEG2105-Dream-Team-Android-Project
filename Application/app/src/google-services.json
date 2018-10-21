@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "182666536561",
+    "firebase_url": "https://seg2105-deliverable.firebaseio.com",
+    "project_id": "seg2105-deliverable",
+    "storage_bucket": "seg2105-deliverable.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182666536561:android:dabdd69c291ec477",
+        "android_client_info": {
+          "package_name": "dreamteam.com.homerepair"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182666536561-t45e2qcg8m7imqf5j57gs8cfratu6ftr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAel5V2kALhw9ynvaY-tfIvX8chyKv3tbU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
