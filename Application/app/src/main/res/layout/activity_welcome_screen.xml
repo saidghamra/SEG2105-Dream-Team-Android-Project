@@ -6,4 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".WelcomeScreenActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:text="TEXT PLACED HERE"
+            android:textSize="40dp" />
+
+        <ListView
+            android:id="@+id/userLists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

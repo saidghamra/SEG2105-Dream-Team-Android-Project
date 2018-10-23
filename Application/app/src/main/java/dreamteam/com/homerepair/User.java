@@ -4,30 +4,20 @@ package dreamteam.com.homerepair;
  * Represents a user object from Firebase
  */
 public class User {
-    private String email;
-    private String password;
-    private String username;
-    private AccountType accountType;
 
-    /**
-     * Creates a user object with default values (null for email,password, username) & account type of home owner
-     */
-    public User(){
-        this.accountType =AccountType.HOME_OWNER;
-    }
+    private AccountType accountType;
+    private String username;
+    private String password;
 
     /**
      * Creates a user object
      * @param username the user's username
-     * @param email the user's email
      * @param password the user's password
      */
-    public User(AccountType accountType,String username, String email, String password){
+    public User(AccountType accountType,String username, String password){
         this.accountType = accountType;
         this.username = username;
-        this.email = email;
         this.password = password;
-
     }
 
     /**
@@ -45,15 +35,6 @@ public class User {
 
     public String getUsername(){
         return this.username;
-    }
-
-    /**
-     * Gets the user's email
-     * @return the user's email
-     */
-
-    public String getEmail(){
-        return this.email;
     }
 
     /**

@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.content.Intent;
+import android.widget.TextView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,10 +31,26 @@ public class WelcomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
+
         usersRef = FirebaseDatabase.getInstance().getReference("users");
         currentUser = createTestUser();
 
-        updateUI();
+
+        // SAIDS CODE. THE CODE I ADDED GETS THE USERNAME AND ROLE TYPE FROM THE INTENT TO PRINT TO THE TEXTBOX
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Getting the username from MainActivity
+        Intent intent = getIntent();
+        String user = intent.getStringExtra("USERNAME");
+        String userRole = intent.getStringExtra("ROLETYPE");
+
+        // Modifying the value of the text view
+        TextView display = findViewById(R.id.welcomeText);
+        display.setText("Welcome " + user + "! You are logged as " + userRole + ".");
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // END OF SAIDS CODE
+
+        // When the database is reinitialized we can update the text view throught the updateUI method
+        //updateUI();
     }
 
     /**
@@ -90,7 +106,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
      */
 
     public User createTestUser(){
-        User testUser = new User(AccountType.ADMIN,"santos", "sgagb074@uottawa.ca", "randPas!word");
+        User testUser = new User(AccountType.ADMIN,"santos", "randPas!word");
         return testUser;
     }
 }
