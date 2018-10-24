@@ -48,7 +48,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         TextView display = findViewById(R.id.welcomeText);
         display.setText("Welcome " + username + "! You are logged in as " + roleType + ".");
 
-        // If the user is an admin, a list of all the users is displayed
+        // If the user is an admin, a list of all the users is displayed (BONUS)
         if(roleType.equals("Admin")){
 
             database.addValueEventListener(new ValueEventListener() {
@@ -79,7 +79,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             });
         }
     }
-
+    // This method populates the ListView listview with all the user accounts present in the database in a nice String format
     public void listUsersForAdmin() {
 
         // Used to store the strings that are going to be displayed in the ListView
@@ -88,15 +88,13 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         // Populating String Array toDisplay with a nice string representation of the users and their functionality
         for(int i = 0; i < users.size(); i++){
 
-            toDisplay[i] = (users.get(i).getAccountType() +": " + users.get(i).getUsername());
+            toDisplay[i] = (users.get(i).getAccountType() +" username: " + users.get(i).getUsername());
             System.out.println( toDisplay[i]);
         }
 
         // Configuring the ListView
         ListView listview = (ListView) findViewById(R.id.userLists);
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,toDisplay);
-
         listview.setAdapter(adapter);
     }
 }
