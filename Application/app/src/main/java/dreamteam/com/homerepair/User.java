@@ -20,6 +20,9 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * Creates a user object
+     */
     public User () {
 
     }
@@ -36,7 +39,6 @@ public class User {
      * Gets the user's username
      * @return the user's username
      */
-
     public String getUsername(){
         return this.username;
     }
@@ -45,7 +47,6 @@ public class User {
      * Gets the user's password
      * @return the user's password
      */
-
     public String getPassword(){
         return this.password;
     }

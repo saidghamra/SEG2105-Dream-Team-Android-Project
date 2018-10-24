@@ -10,18 +10,17 @@ import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class contains the implementation and functionality behind the sign up screen.
+ */
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    // Array userTypes contains all the user types, used for the spinner
-    String[] userTypes={"Admin", "Service Provider", "Home Owner"};
-    String userType,username,password;
-
-    DatabaseReference database;
-
-    EditText usernameText,passwordText;
-    Spinner spinner;
-    Button signUpButton;
+    String[] userTypes={"Admin", "Service Provider", "Home Owner"};     // String list used to store all the user types.
+    String userType,username,password;                                 // Strings representing user type, username, and password respectively.
+    DatabaseReference database;                                       // Stores a DatabaseReference object for firebase use.
+    EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
+    Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
+    Button signUpButton;                                           // Stores a Button object representing the sign up button.
 
     private ArrayList<User> users = new ArrayList<>();
 
@@ -97,7 +96,16 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         });
     }
 
-    // When an item is selected in the spinner
+    /**
+     * This method sets the variable userType to the appropriate type based on
+     * the item selected in the spinner. It also resets the text fields usernameText
+     * and passwordText after every selection. It also displays a toast informing
+     * the user that a certain account type is selected.
+     * @param arg0
+     * @param arg1
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
 
@@ -112,13 +120,20 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         Toast.makeText(getApplicationContext(), userTypes[position] + " Selected", Toast.LENGTH_SHORT).show();
     }
 
-    // When no item is selected in the spinner
+    /**
+     * Method does nothing when no item is selected on the spinner,
+     * since an item is already selected by default.
+     * @param arg0
+     */
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
         // Do nothing
     }
 
-    // This method returns true if the user exists in the database. False otherwise.
+    /**
+     * This method reads the database and checks if the user exists in the database.
+     * @return true if the user exists in the database, false otherwise.
+     */
     public boolean userExists() {
 
         // boolean result used to return the result
@@ -173,7 +188,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         return result;
     }
 
-    // Called when the fields are validated in order to move to WelcomeScreenActivity
+    /**
+     * This method is called when the fields are validated in order to move to WelcomeScreenActivity
+     */
     public void welcomeUser(){
 
         // Passing username and account type to WelcomeStreetActivity
@@ -183,7 +200,10 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         startActivity(intent);
     }
 
-    // Called when all the validation is successful and the user is ready to be added to the database
+    /**
+     * This method is Called when all the validation are successful and adds
+     * the user to the database.
+     */
     public void addUser() {
 
         // Creating a User object to add to the database

@@ -18,8 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 public class WelcomeScreenActivity extends AppCompatActivity {
-    private DatabaseReference database;
-    private ArrayList<User> users = new ArrayList<>();
+
+    private DatabaseReference database;                       // Stores a DatabaseReference object for firebase use.
+    private ArrayList<User> users = new ArrayList<>();       // ArrayList containing all the users in the database.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
 
+        // Initializing the DatabaseReference object
         database = FirebaseDatabase.getInstance().getReference("users");
 
         // Getting the username and roleType from SignUpActivity
@@ -39,7 +41,8 @@ public class WelcomeScreenActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates the user with a welcoming message and if they're an admin, a list of all users in the system
+     * Updates the user with a welcoming message and if they're an admin, a list of all users
+     * in the system is printed.
      */
 
     public void updateUI(String username, String roleType){
@@ -79,7 +82,11 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             });
         }
     }
-    // This method populates the ListView listview with all the user accounts present in the database in a nice String format
+
+    /**
+     * This method populates the ListView listview with all the user accounts
+     * present in the database in a nice String format.
+     */
     public void listUsersForAdmin() {
 
         // Used to store the strings that are going to be displayed in the ListView
@@ -89,7 +96,6 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         for(int i = 0; i < users.size(); i++){
 
             toDisplay[i] = (users.get(i).getAccountType() +" username: " + users.get(i).getUsername());
-            System.out.println( toDisplay[i]);
         }
 
         // Configuring the ListView
