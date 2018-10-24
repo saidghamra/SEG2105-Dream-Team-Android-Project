@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class WelcomeScreenActivity extends AppCompatActivity {
     private DatabaseReference database;
-    private ArrayList<User> users = new ArrayList<User>();
+    private ArrayList<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +48,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         TextView display = findViewById(R.id.welcomeText);
         display.setText("Welcome " + username + "! You are logged in as " + roleType + ".");
 
-
-
-        //UPDATE UI TEXT VIEW
+        // If the user is an admin, a list of all the users is displayed
         if(roleType.equals("Admin")){
 
             database.addValueEventListener(new ValueEventListener() {
@@ -61,14 +59,16 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                     // Clearing the ArrayList users
                     users.clear();
 
+                    // Getting all the users in the database
                     for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
 
+                        // Adding every user in the database to the ArrayList users
                         User user = postSnapShot.getValue(User.class);
                         users.add(user);
-                        //users.add(user.getUsername()+":");
                     }
 
-                    //listUsersForAdmin();
+                    // Method called to list all the users for the admin
+                    listUsersForAdmin();
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -82,17 +82,21 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
     public void listUsersForAdmin() {
 
-//        ArrayList<String> toprint = new ArrayList<String>();
-//
-//        for(int i = 0; i < users.size(); i++){
-//
-//            toprint.add(users.get(i).getUsername()+":" + users.get(i).getAccountType());
-//        }
+        // Used to store the strings that are going to be displayed in the ListView
+        String[] toDisplay = new String[users.size()];
 
+        // Populating String Array toDisplay with a nice string representation of the users and their functionality
+        for(int i = 0; i < users.size(); i++){
+
+            toDisplay[i] = (users.get(i).getAccountType() +": " + users.get(i).getUsername());
+            System.out.println( toDisplay[i]);
+        }
+
+        // Configuring the ListView
         ListView listview = (ListView) findViewById(R.id.userLists);
 
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,users);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,toDisplay);
 
-        //listview.setAdapter(adapter);
+        listview.setAdapter(adapter);
     }
 }

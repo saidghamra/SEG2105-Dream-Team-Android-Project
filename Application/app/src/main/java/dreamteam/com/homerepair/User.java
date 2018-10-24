@@ -20,6 +20,10 @@ public class User {
         this.password = password;
     }
 
+    public User () {
+
+    }
+
     /**
      * Get the type of account the user has
      * @return the user's account type
