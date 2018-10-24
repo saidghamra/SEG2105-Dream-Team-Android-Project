@@ -5,7 +5,7 @@ package dreamteam.com.homerepair;
  */
 public class User {
 
-    private AccountType accountType;
+    private String accountType;
     private String username;
     private String password;
 
@@ -14,7 +14,7 @@ public class User {
      * @param username the user's username
      * @param password the user's password
      */
-    public User(AccountType accountType,String username, String password){
+    public User(String accountType,String username, String password){
         this.accountType = accountType;
         this.username = username;
         this.password = password;
@@ -24,7 +24,7 @@ public class User {
      * Get the type of account the user has
      * @return the user's account type
      */
-    public AccountType getAccountType(){
+    public String getAccountType(){
         return this.accountType;
     }
 
@@ -45,8 +45,5 @@ public class User {
     public String getPassword(){
         return this.password;
     }
-
-
-
 
 }

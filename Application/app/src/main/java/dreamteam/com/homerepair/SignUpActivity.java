@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import com.google.firebase.database.*;
 
 
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -43,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 if (!validateInput(test,test2)) {
 
                     // If input is invalid, display so
-                    Toast.makeText(getApplicationContext(), "Invalid input. Please make sure that none of the fields are null!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Invalid input. Please make sure that none of the fields are empty!", Toast.LENGTH_SHORT).show();
                 }
 
                 else {
@@ -54,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     if (userType.equals("Admin")) {
 
                         // Check if there is an admin, if not add the admin
+                        addUser(test,test2);
                     }
 
                     else {
@@ -61,6 +63,10 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                         // add the user
                         addUser(test,test2);
                     }
+
+                    // Resetting the text view values
+                    username.setText("");
+                    password.setText("");
 
                     // Welcoming user after successful account creation
                     welcomeUser(test,userType);
@@ -115,23 +121,11 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     public void addUser(String username, String password) {
 
         User user;
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("users");
+        String id = database.push().getKey();
 
-        if (userType.equals("Admin")) {
+        user = new User(userType,username,password);
+        database.child(id).setValue(user);
 
-            user = new User(AccountType.ADMIN,username,password);
-        }
-
-        else if (userType.equals("Service Provider")) {
-
-            user = new User(AccountType.SERVICE_PROVIDER,username,password);
-        }
-
-        else if (userType.equals("Home Owner")) {
-
-            user = new User(AccountType.HOME_OWNER,username,password);
-        }
-
-        // ADD USER TO DATABASE
     }
-
 }

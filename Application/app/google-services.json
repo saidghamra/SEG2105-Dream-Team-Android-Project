@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "182666536561-fb1k1vjne8ti6tjji9buk2h439mac1mh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dreamteam.com.homerepair",
+            "certificate_hash": "21c4705d3d01104602dd6babf6875c493ce40e46"
+          }
+        },
+        {
           "client_id": "182666536561-t45e2qcg8m7imqf5j57gs8cfratu6ftr.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182666536561-t45e2qcg8m7imqf5j57gs8cfratu6ftr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
