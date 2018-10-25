@@ -20,14 +20,14 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     DatabaseReference database;                                       // Stores a DatabaseReference object for firebase use.
     EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
     Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
-    Button signUpButton;                                           // Stores a Button object representing the sign up button.
-
-    private ArrayList<User> users = new ArrayList<>();
+    Button signUpButton,signInButton;                              // Stores a Button object representing the sign up and sign in buttons.
+    ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        users = new ArrayList<User>();
 
         // Spinner
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -94,6 +94,44 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 }
             }
         });
+
+        // Sign Up Button
+        signInButton = findViewById(R.id.signin_Button);
+        signInButton.setOnClickListener(new View.OnClickListener() { // On Sign In Button click
+
+            public void onClick(View v) {
+
+                username = usernameText.getText().toString().trim();
+                password = passwordText.getText().toString().trim();
+
+                // Validating text fields input if they're empty
+                if (username.equals("") || password.equals("")) {
+
+                    // If input is invalid, display so
+                    Toast.makeText(getApplicationContext(), "Invalid input. Please make sure that none of the fields are empty!", Toast.LENGTH_SHORT).show();
+                }
+
+                // If the user exists, the welcome screen is displayed
+                else if (userExists()) {
+
+                    Toast.makeText(getApplicationContext(), "Signing you in!", Toast.LENGTH_SHORT).show();
+
+                    // Resetting the text view values
+                    usernameText.setText("");
+                    passwordText.setText("");
+
+                    // Welcoming user after successful account creation
+                    welcomeUser();
+                }
+
+                // If the user doesn't exist, display so
+                else {
+
+                    Toast.makeText(getApplicationContext(), "The user doesn't exist!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     /**
@@ -146,9 +184,6 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                // Clearing the ArrayList users
-                users.clear();
-
                 // Getting all the users in the database
                 for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
 
@@ -168,20 +203,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         // For loop used to access all the users stored in the ArrayList users
         for (int i=0; i<users.size();i++) {
 
-            // If the user wants to create an admin account and an admin account already exists
-            if (userType.equals("Admin") && users.get(i).getAccountType().equals("Admin")) {
-
+            if (users.get(i).getAccountType().equals(userType) && users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
                 result=true;
                 break;
-            }
-
-            // If the user wants to create a Home Owner or Service Provider account and the account already exists 9same username)
-            else if (userType.equals("Home Owner") || userType.equals("Service Provider")) {
-
-                if (users.get(i).getAccountType().equals(userType) && users.get(i).getUsername().equals(username)) {
-                    result=true;
-                    break;
-                }
             }
         }
 
