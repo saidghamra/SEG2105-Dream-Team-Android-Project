@@ -21,13 +21,15 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
     Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
     Button signUpButton,signInButton;                              // Stores a Button object representing the sign up and sign in buttons.
-    ArrayList<User> users;
+    ArrayList<User> users;                                        // ArrayList that stores all the users present in the database
+    boolean passwordValid;                                       // boolean used for password validation when signing in
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         users = new ArrayList<User>();
+        passwordValid=false;
 
         // Spinner
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -92,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     // Welcoming user after successful account creation
                     welcomeUser();
                 }
+                passwordValid=false;
             }
         });
 
@@ -112,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 }
 
                 // If the user exists, the welcome screen is displayed
-                else if (userExists()) {
+                else if (userExists() && passwordValid) {
 
                     Toast.makeText(getApplicationContext(), "Signing you in!", Toast.LENGTH_SHORT).show();
 
@@ -127,9 +130,17 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 // If the user doesn't exist, display so
                 else {
 
-                    Toast.makeText(getApplicationContext(), "The user doesn't exist!", Toast.LENGTH_SHORT).show();
-                }
+                    if (!passwordValid) {
 
+                        Toast.makeText(getApplicationContext(), "Password is invalid!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    else {
+
+                        Toast.makeText(getApplicationContext(), "The user doesn't exist!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                passwordValid=false;
             }
         });
     }
@@ -203,8 +214,18 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         // For loop used to access all the users stored in the ArrayList users
         for (int i=0; i<users.size();i++) {
 
-            if (users.get(i).getAccountType().equals(userType) && users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+            if (users.get(i).getAccountType().equals(userType) && users.get(i).getUsername().equals(username)) {
                 result=true;
+                break;
+            }
+        }
+
+        // For loop used to access all the users stored in the ArrayList users
+        for (int i=0; i<users.size();i++) {
+
+            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+
+                passwordValid=true;
                 break;
             }
         }
