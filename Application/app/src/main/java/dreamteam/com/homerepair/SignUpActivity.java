@@ -17,7 +17,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     String[] userTypes={"Admin", "Service Provider", "Home Owner"};     // String list used to store all the user types.
     String userType,username,password;                                 // Strings representing user type, username, and password respectively.
-    DatabaseReference database;                                       // Stores a DatabaseReference object for firebase use.
+    DatabaseReference databaseReference;                              // Stores a DatabaseReference object for firebase use.
     EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
     Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
     Button signUpButton,signInButton;                              // Stores a Button object representing the sign up and sign in buttons.
@@ -178,8 +178,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         boolean result=false;
 
         // Connecting to the database
-        database = FirebaseDatabase.getInstance().getReference("users");
-        database.addValueEventListener(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -234,8 +234,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         User user =  new User(userType,username,password);
 
         // Connecting to the database, obtaining a unique id, and adding the user
-        database = FirebaseDatabase.getInstance().getReference("users");
-        String id = database.push().getKey();
-        database.child(id).setValue(user);
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        String id = databaseReference.push().getKey();
+        databaseReference.child(id).setValue(user);
     }
 }
