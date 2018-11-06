@@ -82,7 +82,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                // PROBLEM MIGHT BE HERE FOR UPDATING A SERVICE BECAUSE OF THE WAY WE'RE GIVING THE METHOD THE ID
                 Service service = services.get(position);
                 showUpdateDeleteDialog(service.getId(),service.getName());
             }
