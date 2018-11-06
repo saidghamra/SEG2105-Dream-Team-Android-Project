@@ -1,8 +1,11 @@
 package dreamteam.com.homerepair;
 
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,12 +47,15 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         // Initializing the Add Button
         addButton = findViewById(R.id.add_button);
 
+        // Updates the ListView on first start
         updateList();
 
+        // Adding a service functionality
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                // Getting textField Values
                 name = serviceName.getText().toString().trim();
                 rate = serviceRate.getText().toString().trim();
 
@@ -72,18 +78,16 @@ public class AdminWelcomeScreen extends AppCompatActivity {
             }
         });
 
+        // Pressing on an item in the list functionality
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Service service = services.get(position);
-                System.out.println(service.toString());
-
-                deleteService(service.getName());
+                showUpdateDeleteDialog(service.getId(),service.getName());
             }
         });
     }
-
 
     /**
      * This method populates the list view with all the services present in the database.
@@ -137,11 +141,13 @@ public class AdminWelcomeScreen extends AppCompatActivity {
      */
     private void addService(String name, int hourlyRate) {
 
-        // Creating a new service
-        Service service = new Service(name, hourlyRate);
-        // Getting the database reference
+        // Getting the database reference and adding the service
         database = FirebaseDatabase.getInstance().getReference("services");
         String id = database.push().getKey();
+
+        // Creating a new service
+        Service service = new Service(name, hourlyRate, id);
+
         database.child(id).setValue(service);
 
         Toast.makeText(getApplicationContext(), "Added Service!", Toast.LENGTH_SHORT).show();
@@ -157,7 +163,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         database = FirebaseDatabase.getInstance().getReference("services").child(id);
 
         // Updating the service
-        Service service = new Service(name, hourlyRate);
+        Service service = new Service(name, hourlyRate, id);
         database.setValue(service);
 
         Toast.makeText(getApplicationContext(), "Updated Service!", Toast.LENGTH_SHORT).show();
@@ -175,5 +181,65 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         database.removeValue();
 
         Toast.makeText(getApplicationContext(), "Deleted Service!", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * This method is responsible for building the dialog that pops up whenever
+     * an item in the ListView is clicked.
+     * @param id The id of the service selected in the database
+     * @param productName The name of the service selected
+     */
+    private void showUpdateDeleteDialog(final String id, String productName) {
+
+        // Building the AlertDialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.update_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        // Setting up all the buttons and EditText's
+        final EditText editName = (EditText) dialogView.findViewById(R.id.editServiceName);
+        final EditText editRate  = (EditText) dialogView.findViewById(R.id.editServiceRate);
+        final Button updateButton = (Button) dialogView.findViewById(R.id.updateServiceButton);
+        final Button deleteButton = (Button) dialogView.findViewById(R.id.deleteServiceButton);
+
+        dialogBuilder.setTitle(productName);
+        final AlertDialog b = dialogBuilder.create();
+        b.show();
+
+        // If the update button is clicked
+        updateButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                // Getting the EditText values
+                String name = editName.getText().toString().trim();
+                String rate = String.valueOf(editRate.getText().toString());
+
+                // Since you can update only the rate or name of a service at one time, or update both at the same time
+                if (name.equals("") && rate.equals("")) {
+
+                    Toast.makeText(getApplicationContext(), "Please make sure at least one field is populated!", Toast.LENGTH_SHORT).show();
+                }
+                // If validation is successful, update the service
+                else {
+
+                    updateService(id, name, Integer.parseInt(rate));
+                    b.dismiss();
+                }
+            }
+        });
+
+        // If the delete button is pressed
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+
+            // Delete the service
+            @Override
+            public void onClick(View view) {
+                deleteService(id);
+                b.dismiss();
+            }
+        });
     }
 }
