@@ -234,19 +234,29 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     /**
-     * This method is called when the fields are validated in order to move to WelcomeScreenActivity
+     * This method is called when the fields are validated in order to move to WelcomeScreenActivity or AdminWelcomeScreen
      */
     public void welcomeUser(){
+        Intent intent;
 
-        // Passing username and account type to WelcomeStreetActivity
-        Intent intent = new Intent(this, WelcomeScreenActivity.class);
-        intent.putExtra("USERNAME",username);
-        intent.putExtra("ROLETYPE",userType);
-        startActivity(intent);
+        if (userType.equals("Admin")) {
+
+            // Passing username and account type to WelcomeStreetActivity
+            intent = new Intent(this, AdminWelcomeScreen.class);
+            startActivity(intent);
+        }
+
+        else {
+            // Passing username and account type to WelcomeStreetActivity
+            intent = new Intent(this, WelcomeScreenActivity.class);
+            intent.putExtra("USERNAME",username);
+            intent.putExtra("ROLETYPE",userType);
+            startActivity(intent);
+        }
     }
 
     /**
-     * This method is Called when all the validation are successful and adds
+     * This method is called when all the validation are successful and adds
      * the user to the database.
      */
     public void addUser() {
