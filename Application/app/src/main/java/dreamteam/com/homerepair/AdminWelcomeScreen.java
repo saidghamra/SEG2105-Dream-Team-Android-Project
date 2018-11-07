@@ -24,12 +24,12 @@ import java.util.ArrayList;
 
 public class AdminWelcomeScreen extends AppCompatActivity {
 
-    private DatabaseReference database;                             // Stores a DatabaseReference object for firebase use.
-    private ArrayList<Service> services = new ArrayList<>();       // ArrayList containing all the services in the database.
-    Button addButton;
-    EditText serviceName,serviceRate;
-    ListView list;
-    String name, rate;
+    private DatabaseReference database;                              // Stores a DatabaseReference object for FireBase use.
+    private ArrayList<Service> services = new ArrayList<>();        // ArrayList containing all the services in the database.
+    Button addButton;                                              // Stores a button object representing the add button.
+    EditText serviceName,serviceRate;                             // Stores EditText objects that represent the service name and rate fields.
+    ListView list;                                               // Stores a ListView object that displays services.
+    String name, rate;                                          // String name and rate store the name and rate of the service.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,8 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // PROBLEM MIGHT BE HERE FOR UPDATING A SERVICE BECAUSE OF THE WAY WE'RE GIVING THE METHOD THE ID
+
+                // Getting the service that was pressed and displaying the pop up dialog
                 Service service = services.get(position);
                 showUpdateDeleteDialog(service.getId(), service.getName(), service.getHourlyRate());
             }
@@ -111,8 +112,10 @@ public class AdminWelcomeScreen extends AppCompatActivity {
                     services.add(service);
                 }
 
+                // Updates the String list containing a string representation of the services displayed in the ListView
                 updateList();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -144,6 +147,9 @@ public class AdminWelcomeScreen extends AppCompatActivity {
 
     /**
      * This method adds a service to the database.
+     *
+     * @param name The name of the service
+     * @param hourlyRate The hourly rate of the service
      */
     private void addService(String name, int hourlyRate) {
 
@@ -183,7 +189,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
      */
     private void deleteService(String id) {
 
-        // Gettting the specified service reference
+        // Getting the specified service reference
         database = FirebaseDatabase.getInstance().getReference("services").child(id);
 
         // Removing service
