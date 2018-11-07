@@ -48,7 +48,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         addButton = findViewById(R.id.add_button);
 
         // Updates the ListView on first start
-        updateList();
+        updateDatabase();
 
         // Adding a service functionality
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +69,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
                 else {
 
                     addService(name,Integer.parseInt(rate));
-                    updateList();
+                    //updateDatabase();
 
                     // Resetting the TextFields
                     serviceName.setText("");
@@ -84,7 +84,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // PROBLEM MIGHT BE HERE FOR UPDATING A SERVICE BECAUSE OF THE WAY WE'RE GIVING THE METHOD THE ID
                 Service service = services.get(position);
-                showUpdateDeleteDialog(service.getId(),service.getName());
+                showUpdateDeleteDialog(service.getId(), service.getName(), service.getHourlyRate());
             }
         });
     }
@@ -92,7 +92,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
     /**
      * This method populates the list view with all the services present in the database.
      */
-    private void updateList() {
+    private void updateDatabase() {
 
         database = FirebaseDatabase.getInstance().getReference("services");
 
@@ -111,6 +111,8 @@ public class AdminWelcomeScreen extends AppCompatActivity {
                     Service service = postSnapShot.getValue(Service.class);
                     services.add(service);
                 }
+
+                updateList();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -119,8 +121,13 @@ public class AdminWelcomeScreen extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error getting services list from firebase " + databaseError.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        //////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * This method updates the list used to populate the ListView after
+     * every database update.
+     */
+    public void updateList() {
 
         // Used to store the strings that are going to be displayed in the ListView
         String[] toDisplay = new String[services.size()];
@@ -151,11 +158,13 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         database.child(id).setValue(service);
 
         Toast.makeText(getApplicationContext(), "Added Service!", Toast.LENGTH_SHORT).show();
-
     }
 
     /**
-     * This method updates a service in the database.
+     * This method updates an existing service in the database.
+     * @param id the id of the service in the database
+     * @param name the name of the service
+     * @param hourlyRate the hourly rate of the service
      */
     private void updateService(String id, String name, int hourlyRate) {
 
@@ -170,7 +179,8 @@ public class AdminWelcomeScreen extends AppCompatActivity {
     }
 
     /**
-     * This method deletes a service in the database.
+     * This method deletes a service from the database.
+     * @param id the id of the service in the database.
      */
     private void deleteService(String id) {
 
@@ -186,10 +196,12 @@ public class AdminWelcomeScreen extends AppCompatActivity {
     /**
      * This method is responsible for building the dialog that pops up whenever
      * an item in the ListView is clicked.
+     *
      * @param id The id of the service selected in the database
      * @param productName The name of the service selected
+     * @param rateOld The old rate of the service
      */
-    private void showUpdateDeleteDialog(final String id, String productName) {
+    private void showUpdateDeleteDialog(final String id, final String productName, final int rateOld) {
 
         // Building the AlertDialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -222,10 +234,27 @@ public class AdminWelcomeScreen extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(), "Please make sure at least one field is populated!", Toast.LENGTH_SHORT).show();
                 }
+
                 // If validation is successful, update the service
                 else {
 
-                    updateService(id, name, Integer.parseInt(rate));
+                    // If no Service name was entered, use the old service name and update the service rate
+                    if (name.equals("")) {
+
+                        updateService(id, productName, Integer.parseInt(rate));
+                    }
+
+                    // If no rate was entered, use the old rate and update the service name
+                    else if(rate.equals("")) {
+
+                        updateService(id, name, rateOld);
+                    }
+
+                    // If both fields are populated i.e. service name and rate change
+                    else {
+
+                        updateService(id, name, Integer.parseInt(rate));
+                    }
                     b.dismiss();
                 }
             }
