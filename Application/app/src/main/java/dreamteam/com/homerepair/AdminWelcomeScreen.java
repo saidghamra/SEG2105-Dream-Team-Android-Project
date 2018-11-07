@@ -69,7 +69,6 @@ public class AdminWelcomeScreen extends AppCompatActivity {
                 else {
 
                     addService(name,Integer.parseInt(rate));
-                    //updateDatabase();
 
                     // Resetting the TextFields
                     serviceName.setText("");
@@ -195,7 +194,8 @@ public class AdminWelcomeScreen extends AppCompatActivity {
 
     /**
      * This method is responsible for building the dialog that pops up whenever
-     * an item in the ListView is clicked.
+     * an item in the ListView is clicked. The pop up dialog is used to update
+     * or delete services.
      *
      * @param id The id of the service selected in the database
      * @param productName The name of the service selected
@@ -255,6 +255,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
 
                         updateService(id, name, Integer.parseInt(rate));
                     }
+
                     b.dismiss();
                 }
             }
