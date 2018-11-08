@@ -11,11 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#9eb567">
+
         <ImageView
             android:id="@+id/logo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/common_google_signin_btn_icon_light_focused" />
+            android:layout_height="100dp"
+            android:src="@drawable/logo" />
 
         <Spinner
             android:id="@+id/spinner"
