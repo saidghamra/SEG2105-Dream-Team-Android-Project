@@ -4,27 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SignUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#df4526"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp">
-
+        android:background="#9eb567">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/logo"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:src="@drawable/logo" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/common_google_signin_btn_icon_light_focused" />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:textColor="#000000" />
+            android:textColor = "#000000"/>
 
         <EditText
             android:id="@+id/userName"
@@ -47,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign Up"
-            android:textColor="#000000" />
+            android:textColor = "#000000"/>
 
         <Button
             android:id="@+id/signin_Button"
