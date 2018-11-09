@@ -10,15 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#df4526">
+        android:background="#df4526"
+        android:textColor = "#000000">
 
         <TextView
             android:id="@+id/welcomeText"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:text="TEXT PLACED HERE"
-            android:textSize="40dp"
-            android:textColor = "#000000"/>
+            android:textSize="40dp" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
