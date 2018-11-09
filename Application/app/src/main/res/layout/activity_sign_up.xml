@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#9eb567">
+        android:background="#df4526">
 
         <ImageView
             android:id="@+id/logo"
