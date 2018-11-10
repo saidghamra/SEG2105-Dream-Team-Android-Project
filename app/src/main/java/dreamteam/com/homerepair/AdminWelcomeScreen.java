@@ -146,23 +146,44 @@ public class AdminWelcomeScreen extends AppCompatActivity {
     }
 
     /**
-     * This method adds a service to the database.
+     * This method adds a service to the database if the
+     * service doesn't exist in the database.
      *
      * @param name The name of the service
      * @param hourlyRate The hourly rate of the service
      */
     private void addService(String name, int hourlyRate) {
 
-        // Getting the database reference and adding the service
-        database = FirebaseDatabase.getInstance().getReference("services");
-        String id = database.push().getKey();
+        // boolean serviceExists is true if the service already exists in the database, false otherwise
+        boolean serviceExists=false;
 
-        // Creating a new service
-        Service service = new Service(name, hourlyRate, id);
+        // For loop that cross references all the services in the ArrayList services againt name
+        for (int i=0; i<services.size();i++) {
+            // If the name exists
+            if (services.get(i).getName().equals(name)) {
+                serviceExists=true;
+                break;
+            }
+        }
 
-        database.child(id).setValue(service);
+        // If the service exists, notify the user
+        if (serviceExists) {
+            Toast.makeText(getApplicationContext(), "Service already exists!", Toast.LENGTH_SHORT).show();
+        }
 
-        Toast.makeText(getApplicationContext(), "Added Service!", Toast.LENGTH_SHORT).show();
+        // If the service doesn't exist, add the service to the database
+        else {
+            // Getting the database reference and adding the service
+            database = FirebaseDatabase.getInstance().getReference("services");
+            String id = database.push().getKey();
+
+            // Creating a new service
+            Service service = new Service(name, hourlyRate, id);
+
+            database.child(id).setValue(service);
+
+            Toast.makeText(getApplicationContext(), "Added Service!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
