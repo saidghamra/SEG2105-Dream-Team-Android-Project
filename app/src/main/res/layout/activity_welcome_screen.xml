@@ -17,7 +17,7 @@
             android:id="@+id/welcomeText"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:text="TEXT PLACED HERE"
+            android:text="Text"
             android:textSize="40dp" />
 
     </LinearLayout>

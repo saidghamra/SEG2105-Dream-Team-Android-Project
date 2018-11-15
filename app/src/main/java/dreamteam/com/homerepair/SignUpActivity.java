@@ -15,14 +15,14 @@ import java.util.ArrayList;
  */
 public class SignUpActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    String[] userTypes={"Admin", "Service Provider", "Home Owner"};     // String list used to store all the user types.
-    String userType,username,password;                                 // Strings representing user type, username, and password respectively.
-    DatabaseReference databaseReference;                              // Stores a DatabaseReference object for firebase use.
-    EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
-    Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
-    Button signUpButton,signInButton;                              // Stores a Button object representing the sign up and sign in buttons.
-    ArrayList<User> users;                                        // ArrayList that stores all the users present in the database
-    boolean passwordValid;                                       // boolean used for password validation when signing in
+    private String[] userTypes={"Admin", "Service Provider", "Home Owner"};     // String list used to store all the user types.
+    private String userType,username,password,id;                              // Strings representing user type, username, password, and database id respectively.
+    private DatabaseReference databaseReference;                              // Stores a DatabaseReference object for firebase use.
+    private EditText usernameText,passwordText;                              // Stores EditText objects for the username and password fields.
+    private Spinner spinner;                                                // Stores a Spinner object representing the spinner containing the user types.
+    private Button signUpButton,signInButton;                              // Stores a Button object representing the sign up and sign in buttons.
+    private ArrayList<User> users;                                        // ArrayList that stores all the users present in the database
+    private boolean passwordValid;                                       // boolean used for password validation when signing in
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,11 +246,18 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             startActivity(intent);
         }
 
-        else {
+        else if (userType.equals("Home Owner")) {
             // Passing username and account type to WelcomeStreetActivity
             intent = new Intent(this, WelcomeScreenActivity.class);
             intent.putExtra("USERNAME",username);
             intent.putExtra("ROLETYPE",userType);
+            startActivity(intent);
+        }
+
+        else if (userType.equals("Service Provider")) {
+            //
+            intent = new Intent(this, ServiceProviderProfileSetUp.class);
+            intent.putExtra("SERVICEPROVIDERID",id);
             startActivity(intent);
         }
     }
@@ -261,12 +268,13 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
      */
     public void addUser() {
 
-        // Creating a User object to add to the database
-        User user =  new User(userType,username,password);
-
         // Connecting to the database, obtaining a unique id, and adding the user
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        String id = databaseReference.push().getKey();
+        id = databaseReference.push().getKey();
+
+        // Creating a User object to add to the database
+        User user =  new User(id,userType,username,password);
+
         databaseReference.child(id).setValue(user);
     }
 }

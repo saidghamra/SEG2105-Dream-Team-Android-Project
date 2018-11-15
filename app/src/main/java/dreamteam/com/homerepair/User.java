@@ -8,13 +8,15 @@ public class User {
     private String accountType;
     private String username;
     private String password;
+    private String id;
 
     /**
      * Creates a user object
      * @param username the user's username
      * @param password the user's password
      */
-    public User(String accountType,String username, String password){
+    public User(String id, String accountType,String username, String password){
+        this.id=id;
         this.accountType = accountType;
         this.username = username;
         this.password = password;
@@ -49,6 +51,14 @@ public class User {
      */
     public String getPassword(){
         return this.password;
+    }
+
+    /**
+     * Gets the user's id in the database
+     * @return the user's database id
+     */
+    public String getId(){
+        return this.id;
     }
 
 }

@@ -24,12 +24,12 @@ import java.util.ArrayList;
 
 public class AdminWelcomeScreen extends AppCompatActivity {
 
-    private DatabaseReference database;                              // Stores a DatabaseReference object for FireBase use.
-    private ArrayList<Service> services = new ArrayList<>();        // ArrayList containing all the services in the database.
-    Button addButton;                                              // Stores a button object representing the add button.
-    EditText serviceName,serviceRate;                             // Stores EditText objects that represent the service name and rate fields.
-    ListView list;                                               // Stores a ListView object that displays services.
-    String name, rate;                                          // String name and rate store the name and rate of the service.
+    private DatabaseReference database;                                      // Stores a DatabaseReference object for FireBase use.
+    private ArrayList<Service> services = new ArrayList<>();                // ArrayList containing all the services in the database.
+    private Button addButton;                                              // Stores a button object representing the add button.
+    private EditText serviceName,serviceRate;                             // Stores EditText objects that represent the service name and rate fields.
+    private ListView list;                                               // Stores a ListView object that displays services.
+    private String name, rate;                                          // String name and rate store the name and rate of the service.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

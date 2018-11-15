@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".WelcomeScreenActivity" />
-        <activity android:name=".AdminWelcomeScreen"></activity>
+        <activity android:name=".AdminWelcomeScreen" />
+        <activity android:name=".ServiceProviderProfileSetUp"></activity>
     </application>
 
 </manifest>
