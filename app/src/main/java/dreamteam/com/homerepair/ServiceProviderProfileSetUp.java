@@ -105,6 +105,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
                     createProfile();
                     Toast.makeText(getApplicationContext(), "Profile completed!", Toast.LENGTH_SHORT).show();
+                    showInformationScreen();
                 }
             }
         });
@@ -209,9 +210,29 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     * 
+     *
      */
     private void showServicesDialog() {
 
+    }
+
+    /**
+     *
+     */
+    private void showInformationScreen() {
+
+        // Creating a new intent
+        Intent intent = new Intent(this, ServiceProviderProfile.class);
+
+        // Passing all parameters to ServiceProviderProfile
+        intent.putExtra("ADDRESS",address);
+        intent.putExtra("PHONENUMBER",phoneNumber);
+        intent.putExtra("COMPANYNAME",companyName);
+        intent.putExtra("LICENSED",licensed);
+        intent.putExtra("AVAILABILITY",availability);
+        intent.putExtra("SERVICES",services);
+
+        // Starting the activity
+        startActivity(intent);
     }
 }

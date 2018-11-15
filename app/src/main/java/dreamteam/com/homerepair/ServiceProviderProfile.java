@@ -51,6 +51,11 @@ public class ServiceProviderProfile {
         return services;
     }
 
+    public ArrayList<String> getAvailability() {
+
+        return availability;
+    }
+
     public void addService (Service service) {
 
         services.add(service);
