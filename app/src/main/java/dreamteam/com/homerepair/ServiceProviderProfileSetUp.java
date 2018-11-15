@@ -37,7 +37,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         licensed=false;
 
         //Initializing ArrayLists
-
         services = new ArrayList<>();
         availability = new ArrayList<>();
 
@@ -51,8 +50,8 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         companyName_Text = (EditText) findViewById(R.id.companyName);
 
         // Initializing Button
-
         addAvailability =  findViewById(R.id.add_availability);
+        // If the service provider wants to set his availability
         addAvailability.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,8 +61,8 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         });
 
         // Initializing Button
-
         addServices =  findViewById(R.id.add_services);
+        // If the service provider wants to set up the services he provides
         addServices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,33 +73,41 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Initializing Button
         completeProfileButton = findViewById(R.id.completeProfile_Button);
+        // If the service provider wants to complete his profile
         completeProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                // Getting values from the EditTexts
                 address = address_Text.getText().toString().trim();
                 phoneNumber = phoneNumber_Text.getText().toString().trim();
                 companyName = companyName_Text.getText().toString().trim();
 
+                // Field Validations
+                // If any of the EditTexts are empty
                 if (address.equals("") || phoneNumber.equals("") || companyName.equals("")) {
 
                     Toast.makeText(getApplicationContext(), "Invalid input. Please make sure none of the fields are empty.", Toast.LENGTH_SHORT).show();
                 }
+
+                // If the phone number length is not 10 digits in length
                 else if (phoneNumber.length()!=10) {
 
                     Toast.makeText(getApplicationContext(), "Please make sure the phone number is in the form of 1234567892.", Toast.LENGTH_SHORT).show();
                 }
-
+                // If the service provider didnt set any availability
                 else if(availability.size()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please add at least one availability!", Toast.LENGTH_SHORT).show();
                 }
 
+                // If the service provier didnt select any services
                 else if (services.size()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
                 }
 
+                // If all checks pass, create the profile and move on to the next screen
                 else{
 
                     createProfile();
@@ -168,11 +175,12 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         final Switch saturday = (Switch) dialogView.findViewById(R.id.saturday_switch);
         final Switch sunday = (Switch) dialogView.findViewById(R.id.sunday_switch);
 
+        // Showing the dialog
         dialogBuilder.setTitle("Availability");
         final AlertDialog b = dialogBuilder.create();
         b.show();
 
-        // When the user is done selecting his availability
+        // When the service provider is done selecting his availability, gather all availabilities
         final Button done = (Button) dialogView.findViewById(R.id.availabilityDone_button);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +212,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                     availability.add("Sunday 9-5");
                 }
 
+                // Dismissing the dialog
                 b.dismiss();
             }
         });
