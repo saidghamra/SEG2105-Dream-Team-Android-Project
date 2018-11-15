@@ -96,10 +96,10 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please add at least one availability!", Toast.LENGTH_SHORT).show();
                 }
 
-                else if (services.size()==0) {
-
-                    Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
-                }
+//                else if (services.size()==0) {
+//
+//                    Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
+//                }
 
                 else{
 

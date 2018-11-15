@@ -55,14 +55,4 @@ public class ServiceProviderProfile {
 
         return availability;
     }
-
-    public void addService (Service service) {
-
-        services.add(service);
-    }
-
-    public void removeService(Service service) {
-
-        services.remove(service);
-    }
 }
