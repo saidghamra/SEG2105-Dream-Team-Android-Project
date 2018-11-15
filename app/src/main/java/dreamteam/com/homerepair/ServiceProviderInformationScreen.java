@@ -23,6 +23,7 @@ public class ServiceProviderInformationScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_provider_information_screen);
 
+        // Getting all the service provider information from ServiceProviderProfileSetUp
         Intent intent = getIntent();
         address = intent.getStringExtra("ADDRESS");
         phoneNumber = intent.getStringExtra("PHONENUMBER");
@@ -31,6 +32,7 @@ public class ServiceProviderInformationScreen extends AppCompatActivity {
         availability = intent.getStringArrayListExtra("AVAILABILITY");
         services = (ArrayList<Service>) intent.getSerializableExtra("SERVICES");
 
+        // Updates the TextView to display the service providers profile information
         updateTextView();
 
         // Initializing Button
@@ -44,9 +46,12 @@ public class ServiceProviderInformationScreen extends AppCompatActivity {
 
     }
 
-
+    /**
+     * This method updates the TextView with the service provider profile information.
+     */
     public void updateTextView() {
 
+        // Initializing the TextView
         info = findViewById(R.id.serviceProviderInformation);
         info.setText("Address: " + address
                     + "\nPhone Number: " + phoneNumber

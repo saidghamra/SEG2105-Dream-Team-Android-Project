@@ -138,7 +138,8 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     *
+     * This method gets all the services the Admin has added so the service provider
+     * can choose what services he provides.
      */
     private void getServices() {
 
