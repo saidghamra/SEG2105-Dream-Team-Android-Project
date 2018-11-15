@@ -137,12 +137,16 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     */
     private void getServices() {
 
     }
 
     /**
-     *
+     * This method is called when all the validations pass and creates the ServiceProviderProfile
+     * object and adds it to the database.
      */
     private void createProfile() {
 
@@ -156,7 +160,9 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     *
+     * This method shows the dialog containing the days and hours a service provider
+     * can choose from to provide his services. This method is called whenever
+     * the service provider clicks on the add availability button.
      */
     private void showHoursDialog() {
 
@@ -226,7 +232,9 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     *
+     * This method is called when the service provider completes his profile
+     * and moves on to ServiceProviderInformationScreen screen where the service
+     * provider can see the information he just entered.
      */
     private void showInformationScreen() {
 

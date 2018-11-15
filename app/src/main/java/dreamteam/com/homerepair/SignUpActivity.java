@@ -234,7 +234,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     /**
-     * This method is called when the fields are validated in order to move to WelcomeScreenActivity or AdminWelcomeScreen
+     * This method is called when the fields are validated in order to move to WelcomeScreenActivity, AdminWelcomeScreen,
+     * or ServiceProviderProfileSetup screens.
      */
     public void welcomeUser(){
         Intent intent;
