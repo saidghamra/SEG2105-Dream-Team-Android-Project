@@ -96,10 +96,10 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please add at least one availability!", Toast.LENGTH_SHORT).show();
                 }
 
-//                else if (services.size()==0) {
-//
-//                    Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
-//                }
+                else if (services.size()==0) {
+
+                    Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
+                }
 
                 else{
 
@@ -222,7 +222,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     private void showInformationScreen() {
 
         // Creating a new intent
-        Intent intent = new Intent(this, ServiceProviderProfile.class);
+        Intent intent = new Intent(this, ServiceProviderInformationScreen.class);
 
         // Passing all parameters to ServiceProviderProfile
         intent.putExtra("ADDRESS",address);

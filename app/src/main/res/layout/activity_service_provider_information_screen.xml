@@ -18,7 +18,9 @@
             android:id="@+id/serviceProviderInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Information" />
+            android:text="Information"
+            android:textColor="#000000"
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/editInformation_button"
