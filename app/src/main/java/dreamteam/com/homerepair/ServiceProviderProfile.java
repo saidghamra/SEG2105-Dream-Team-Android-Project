@@ -8,14 +8,16 @@ public class ServiceProviderProfile {
     private String address, phoneNumber, companyName, id;
     private boolean licensed;
     private ArrayList<Service> services;
+    private ArrayList<String> availability;
 
     // Constructor Methods
-    public ServiceProviderProfile (String id, String address, String phoneNumber, String companyName, boolean licensed, ArrayList<Service> services) {
+    public ServiceProviderProfile (String id, String address, String phoneNumber, String companyName, boolean licensed, ArrayList<String> availability, ArrayList<Service> services) {
         this.id=id;
         this.address=address;
         this.phoneNumber=phoneNumber;
         this.companyName=companyName;
         this.services=services;
+        this.availability=availability;
         this.licensed=licensed;
     }
 

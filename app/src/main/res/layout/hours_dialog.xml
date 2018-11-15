@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#df4526"
+    android:orientation="vertical">
+
+    <Switch
+        android:id="@+id/monday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Monday 9-5     " />
+
+    <Switch
+        android:id="@+id/tuesday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Tuesday 9-5     " />
+
+    <Switch
+        android:id="@+id/wednesday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Wednesday 9-5     " />
+
+    <Switch
+        android:id="@+id/thursday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Thursday 9-5     " />
+
+    <Switch
+        android:id="@+id/friday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Friday 9-5     " />
+
+    <Switch
+        android:id="@+id/saturday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Saturday 9-5     " />
+
+    <Switch
+        android:id="@+id/sunday_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Sunday 9-5     " />
+
+    <Button
+        android:id="@+id/availabilityDone_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Done" />
+</LinearLayout>
