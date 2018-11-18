@@ -92,13 +92,13 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     passwordText.setText("");
 
                     // Welcoming user after successful account creation
-                    welcomeUser();
+                    welcomeUser("SIGNUP");
                 }
                 passwordValid=false;
             }
         });
 
-        // Sign Up Button
+        // Sign In Button
         signInButton = findViewById(R.id.signin_Button);
         signInButton.setOnClickListener(new View.OnClickListener() { // On Sign In Button click
 
@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     passwordText.setText("");
 
                     // Welcoming user after successful account creation
-                    welcomeUser();
+                    welcomeUser("SIGNIN");
                 }
 
                 // If the user doesn't exist, display so
@@ -215,6 +215,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         for (int i=0; i<users.size();i++) {
 
             if (users.get(i).getAccountType().equals(userType) && users.get(i).getUsername().equals(username)) {
+
                 result=true;
                 break;
             }
@@ -226,6 +227,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
 
                 passwordValid=true;
+                id=users.get(i).getId();
                 break;
             }
         }
@@ -235,19 +237,22 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     /**
      * This method is called when the fields are validated in order to move to WelcomeScreenActivity, AdminWelcomeScreen,
-     * or ServiceProviderProfileSetup screens.
+     * ServiceProviderProfileSetup, or ServiceProviderInformationScreen screens.
+     *
+     * @param type String variable used to determine whether a user is signing up or signing in
      */
-    public void welcomeUser(){
+    public void welcomeUser(String type){
         Intent intent;
 
         if (userType.equals("Admin")) {
 
-            // Passing username and account type to WelcomeStreetActivity
+            // Passing username and account type to AdminWelcomeScreen
             intent = new Intent(this, AdminWelcomeScreen.class);
             startActivity(intent);
         }
 
         else if (userType.equals("Home Owner")) {
+
             // Passing username and account type to WelcomeStreetActivity
             intent = new Intent(this, WelcomeScreenActivity.class);
             intent.putExtra("USERNAME",username);
@@ -255,10 +260,21 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             startActivity(intent);
         }
 
-        else if (userType.equals("Service Provider")) {
-            //
+        // If the service provider is signing up, allow him to set his profile up
+        else if (userType.equals("Service Provider") && type.equals("SIGNUP")) {
+
+            // Passing the service provider database id to ServiceProviderProfileSetup
             intent = new Intent(this, ServiceProviderProfileSetUp.class);
             intent.putExtra("SERVICEPROVIDERID",id);
+            startActivity(intent);
+        }
+
+        // If the service provider is signing in, display his profile information
+        else if (userType.equals("Service Provider") && type.equals("SIGNIN")) {
+
+            // Passing the service provider database id to ServiceProviderInformationScreen
+            intent = new Intent(this, ServiceProviderInformationScreen.class);
+            intent.putExtra("SERVICEPROVIDERDBID",id);
             startActivity(intent);
         }
     }

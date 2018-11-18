@@ -45,15 +45,16 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Getting the Service Provider database id from SignUpActivity
         Intent intent = getIntent();
-        id = intent.getStringExtra("SERVICEPROVIDERDBID");
+        id = intent.getStringExtra("SERVICEPROVIDERID");
 
-        // Initializing EditText Objects
+        // Initializing Buttons and EditTexts
         address_Text = (EditText) findViewById(R.id.address);
         phoneNumber_Text = (EditText) findViewById(R.id.phoneNumber);
         companyName_Text = (EditText) findViewById(R.id.companyName);
-
-        // Initializing Button
         addAvailability =  findViewById(R.id.add_availability);
+        addServices =  findViewById(R.id.add_services);
+        completeProfileButton = findViewById(R.id.completeProfile_Button);
+        licensed_switch = findViewById(R.id.licensed_switch);
 
         // If the service provider wants to set his availability
         addAvailability.setOnClickListener(new View.OnClickListener() {
@@ -64,9 +65,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
             }
         });
 
-        // Initializing Button
-        addServices =  findViewById(R.id.add_services);
-
         // If the service provider wants to set up the services he provides
         addServices.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,9 +73,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                 showServicesScreen();
             }
         });
-
-        // Initializing Button
-        completeProfileButton = findViewById(R.id.completeProfile_Button);
 
         // If the service provider wants to complete his profile
         completeProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +119,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         });
 
         // Switch used to determine whether a service provider is licensed or not
-        licensed_switch = findViewById(R.id.licensed_switch);
         licensed_switch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +144,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
      */
     private void createProfile() {
 
-        database = FirebaseDatabase.getInstance().getReference("ServiceProviderProfiles");
+        database = FirebaseDatabase.getInstance().getReference("serviceproviderprofiles");
         String otherID = database.push().getKey();
 
         // Creating the ServiceProviderProfile object
@@ -246,20 +240,17 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         // Creating a new intent
         Intent intent = new Intent(this, ServiceProviderInformationScreen.class);
 
-        // Passing all parameters to ServiceProviderProfile
-        intent.putExtra("ADDRESS",address);
-        intent.putExtra("PHONENUMBER",phoneNumber);
-        intent.putExtra("COMPANYNAME",companyName);
-        intent.putExtra("LICENSED",licensed);
-        intent.putExtra("AVAILABILITY",availability);
-        intent.putExtra("SERVICES",services);
+        // Passing the database id of the service provider to ServiceProviderInformationScreen
+        intent.putExtra("SERVICEPROVIDERDBID",id);
 
         // Starting the activity
         startActivity(intent);
     }
 
     /**
-     * Overrriding the method onActivityResult inorder to get
+     * Overrriding the method onActivityResult inorder to get the list of services
+     * that the service provider chose.
+     *
      * @param requestCode
      * @param resultCode
      * @param data
