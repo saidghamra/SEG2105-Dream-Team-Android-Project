@@ -19,7 +19,8 @@
         <activity android:name=".WelcomeScreenActivity" />
         <activity android:name=".AdminWelcomeScreen" />
         <activity android:name=".ServiceProviderProfileSetUp" />
-        <activity android:name=".ServiceProviderInformationScreen"></activity>
+        <activity android:name=".ServiceProviderInformationScreen" />
+        <activity android:name=".chooseServices"></activity>
     </application>
 
 </manifest>

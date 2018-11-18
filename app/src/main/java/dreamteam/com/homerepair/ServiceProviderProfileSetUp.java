@@ -1,6 +1,7 @@
 package dreamteam.com.homerepair;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +13,11 @@ import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -25,8 +29,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     private DatabaseReference database;
     private boolean licensed;
     private String address,phoneNumber,companyName,id;
-    private ArrayList<Service> services;
-    private ArrayList<String> availability;
+    private ArrayList<String> availability, services;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Initializing Button
         addAvailability =  findViewById(R.id.add_availability);
+
         // If the service provider wants to set his availability
         addAvailability.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,17 +66,19 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Initializing Button
         addServices =  findViewById(R.id.add_services);
+
         // If the service provider wants to set up the services he provides
         addServices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                showServicesDialog();
+                showServicesScreen();
             }
         });
 
         // Initializing Button
         completeProfileButton = findViewById(R.id.completeProfile_Button);
+
         // If the service provider wants to complete his profile
         completeProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,13 +101,13 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(), "Please make sure the phone number is in the form of 1234567892.", Toast.LENGTH_SHORT).show();
                 }
-                // If the service provider didnt set any availability
+                // If the service provider didn't set any availability
                 else if(availability.size()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please add at least one availability!", Toast.LENGTH_SHORT).show();
                 }
 
-                // If the service provier didnt select any services
+                // If the service provier didn't select any services
                 else if (services.size()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
@@ -122,6 +128,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         licensed_switch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // If the service provider is unlicensed
                 if (licensed_switch.isChecked()) {
 
@@ -135,14 +142,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    /**
-     * This method gets all the services the Admin has added so the service provider
-     * can choose what services he provides.
-     */
-    private void getServices() {
-
     }
 
     /**
@@ -226,10 +225,15 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     *
+     * This method shows a screen that contains all the services the admin offers
+     * so the service provider can choose from. This method is called whenever
+     * the service provider clicks on the add services button.
      */
-    private void showServicesDialog() {
+    private void showServicesScreen() {
 
+        // Launching a new intent to get the services the service provider chose
+        Intent intent = new Intent(this, chooseServices.class);
+        startActivityForResult(intent,5);
     }
 
     /**
@@ -252,5 +256,22 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Starting the activity
         startActivity(intent);
+    }
+
+    /**
+     * Overrriding the method onActivityResult inorder to get
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 5) {
+
+            services = data.getStringArrayListExtra("SERVICESCHOSEN");
+        }
     }
 }

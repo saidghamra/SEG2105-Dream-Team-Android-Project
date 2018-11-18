@@ -137,7 +137,7 @@ public class AdminWelcomeScreen extends AppCompatActivity {
         // Populating String Array toDisplay with a nice string representation of the services
         for(int i = 0; i < services.size(); i++){
 
-            toDisplay[i] = (services.get(i).getName() + ": $" + services.get(i).getHourlyRate());
+            toDisplay[i] = (services.get(i).toString());
         }
 
         // Configuring the ListView
