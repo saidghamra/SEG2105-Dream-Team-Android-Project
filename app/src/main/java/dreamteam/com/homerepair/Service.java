@@ -10,6 +10,7 @@ public class Service {
 
     /**
      * Creates a service object
+     *
      * @param name the service name
      * @param hourlyRate the service's hourly rate
      * @param id the service id in the database

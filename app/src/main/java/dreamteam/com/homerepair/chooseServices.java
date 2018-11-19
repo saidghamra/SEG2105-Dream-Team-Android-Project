@@ -35,8 +35,10 @@ public class chooseServices extends AppCompatActivity {
         setContentView(R.layout.activity_choose_services);
 
         // Initializing ArrayLists
-        serviceProviderServices = new ArrayList<>();
         adminServices = new ArrayList<>();
+
+        Intent intent = getIntent();
+        serviceProviderServices = intent.getStringArrayListExtra("SERVICES");
 
         // Getting services offered by the admin from the database
         getServices();
@@ -125,8 +127,14 @@ public class chooseServices extends AppCompatActivity {
 
                 // Getting all the services in the database and adding them to the ArrayList adminServices
                 for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+
                     Service service = postSnapShot.getValue(Service.class);
-                    adminServices.add(service.toString());
+
+                    // If the service provider already chose this service, dont add it to adminServices ArrayList
+                    if (!serviceProviderServices.contains(service.toString())) {
+
+                        adminServices.add(service.toString());
+                    }
                 }
             }
 

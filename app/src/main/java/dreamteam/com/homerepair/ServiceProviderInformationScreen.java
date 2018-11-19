@@ -60,11 +60,11 @@ public class ServiceProviderInformationScreen extends AppCompatActivity {
         // Initializing the TextView
         info = findViewById(R.id.serviceProviderInformation);
         info.setText("Address: " + profile.getAddress()
-                    + "\nPhone Number: " + profile.getPhoneNumber()
-                    + "\nCompany Name: " + profile.getCompanyName()
-                    + "\n Licensed: " + profile.getLicensed()
-                    + "\nAvailability: " + profile.getAvailability()
-                    + "\n Services: " + profile.getServices());
+                    + "\n\nPhone Number: " + profile.getPhoneNumber()
+                    + "\n\nCompany Name: " + profile.getCompanyName()
+                    + "\n\nLicensed: " + profile.getLicensed()
+                    + "\n\nAvailability: " + profile.getAvailability()
+                    + "\n\nServices: " + profile.getServices());
     }
 
     /**

@@ -23,21 +23,22 @@ import java.util.ArrayList;
 
 public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
-    private EditText address_Text,phoneNumber_Text,companyName_Text;
-    private Switch licensed_switch;
-    private Button completeProfileButton, addAvailability, addServices;
-    private DatabaseReference database;
-    private boolean licensed;
-    private String address,phoneNumber,companyName,id;
-    private ArrayList<String> availability, services;
+    private EditText address_Text,phoneNumber_Text,companyName_Text;                         // Stores EditText objects for the service providers address, phone number, and company name
+    private Switch licensed_switch;                                                         // Stores Switch object that is used to determine whether the service provider is licensed or not
+    private Button completeProfileButton, addAvailability, addServices;                    // Stores Button objects that are used to determine when the service provider wants to complete his profile, add availabilities or services
+    private DatabaseReference database;                                                   // Stores a DatabaseReference object for FireBase use.
+    private boolean licensed, profileExists;                                             // boolean used to determine whether the service provider is licensed and whether his profile exists
+    private String address,phoneNumber,companyName,id,profileID;                        // Strings used to store the service providers address, phone number, company name, database id, and profile database id
+    private ArrayList<String> availability, services;                                  // ArrayLists<String> used to store the service providers availabilities and services
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_provider_profile_set_up);
 
-        // By default, the service provider is not licensed
+        // By default, the service provider is not licensed and the profile of the service provider doesn't exist in the database
         licensed=false;
+        profileExists=false;
 
         //Initializing ArrayLists
         services = new ArrayList<>();
@@ -55,6 +56,9 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         addServices =  findViewById(R.id.add_services);
         completeProfileButton = findViewById(R.id.completeProfile_Button);
         licensed_switch = findViewById(R.id.licensed_switch);
+
+        // Method is called to check if the profile exists
+        profileExists();
 
         // If the service provider wants to set his availability
         addAvailability.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +106,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please add at least one availability!", Toast.LENGTH_SHORT).show();
                 }
 
-                // If the service provier didn't select any services
+                // If the service provider didn't select any services
                 else if (services.size()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please add at least one service!", Toast.LENGTH_SHORT).show();
@@ -112,7 +116,6 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
                 else{
 
                     createProfile();
-                    Toast.makeText(getApplicationContext(), "Profile completed!", Toast.LENGTH_SHORT).show();
                     showInformationScreen();
                 }
             }
@@ -140,17 +143,38 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
     /**
      * This method is called when all the validations pass and creates the ServiceProviderProfile
-     * object and adds it to the database.
+     * object and adds it to the database. If the profile already exists in the database, it over-
+     * writes it.
      */
     private void createProfile() {
 
-        database = FirebaseDatabase.getInstance().getReference("serviceproviderprofiles");
-        String otherID = database.push().getKey();
+        // If the profile exists in the database, update it
+        if (profileExists) {
 
-        // Creating the ServiceProviderProfile object
-        ServiceProviderProfile profile = new ServiceProviderProfile(id, address, phoneNumber, companyName, licensed, availability, services);
+            // Getting the specified service provider profile reference
+            database = FirebaseDatabase.getInstance().getReference("serviceproviderprofiles").child(profileID);
 
-        database.child(otherID).setValue(profile);
+            // Updating the service provider profile
+            ServiceProviderProfile profile = new ServiceProviderProfile(id, address, phoneNumber, companyName, licensed, availability, services);
+            database.setValue(profile);
+
+            Toast.makeText(getApplicationContext(), "Updated Profile!", Toast.LENGTH_SHORT).show();
+        }
+
+        // If the profile doesn't exist in the database, create it
+        else {
+
+            database = FirebaseDatabase.getInstance().getReference("serviceproviderprofiles");
+
+            String otherID = database.push().getKey();
+
+            // Creating the ServiceProviderProfile object
+            ServiceProviderProfile profile = new ServiceProviderProfile(id, address, phoneNumber, companyName, licensed, availability, services);
+
+            database.child(otherID).setValue(profile);
+
+            Toast.makeText(getApplicationContext(), "Created Profile!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -174,6 +198,36 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
         final Switch friday = (Switch) dialogView.findViewById(R.id.friday_switch);
         final Switch saturday = (Switch) dialogView.findViewById(R.id.saturday_switch);
         final Switch sunday = (Switch) dialogView.findViewById(R.id.sunday_switch);
+
+        // If availabilities already exists, update the switches to reflect so
+        if (availability.size()!=0) {
+
+            for (int i=0; i<availability.size(); i++) {
+
+                if (availability.get(i).equals("Monday 9-5")) {
+                    monday.setChecked(true);
+                }
+                if (availability.get(i).equals("Tuesday 9-5")) {
+
+                    tuesday.setChecked(true);
+                }
+                if (availability.get(i).equals("Wednesday 9-5")) {
+                    wednesday.setChecked(true);
+                }
+                if (availability.get(i).equals("Thursday 9-5")) {
+                    thursday.setChecked(true);
+                }
+                if (availability.get(i).equals("Friday 9-5")) {
+                    friday.setChecked(true);
+                }
+                if (availability.get(i).equals("Saturday 9-5")) {
+                    saturday.setChecked(true);
+                }
+                if (availability.get(i).equals("Sunday 9-5")) {
+                    sunday.setChecked(true);
+                }
+            }
+        }
 
         // Showing the dialog
         dialogBuilder.setTitle("Availability");
@@ -227,6 +281,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
         // Launching a new intent to get the services the service provider chose
         Intent intent = new Intent(this, chooseServices.class);
+        intent.putExtra("SERVICES",services);
         startActivityForResult(intent,5);
     }
 
@@ -248,7 +303,7 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
     }
 
     /**
-     * Overrriding the method onActivityResult inorder to get the list of services
+     * Overriding the method onActivityResult inorder to get the list of services
      * that the service provider chose.
      *
      * @param requestCode
@@ -264,5 +319,60 @@ public class ServiceProviderProfileSetUp extends AppCompatActivity {
 
             services = data.getStringArrayListExtra("SERVICESCHOSEN");
         }
+    }
+
+    /**
+     * This method retrieves all the service provider profiles from the database and checks whether
+     * the service provider id stored in this activity is associated with a service provider profile.
+     * If so, call method populateFields(). This is used when the service provider wants to edit his
+     * profile information.
+     */
+    public void profileExists() {
+
+        database = FirebaseDatabase.getInstance().getReference("serviceproviderprofiles");
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                // Accessing all the profiles stored in the database
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+
+                    ServiceProviderProfile profile = postSnapShot.getValue(ServiceProviderProfile.class);
+
+                    // When the service provider profile we are looking for is found, update the text view
+                    if (profile.getId().equals(id)) {
+
+                        profileID = postSnapShot.getKey();
+                        populateFields(profile);
+                        profileExists=true;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                // Displaying a toast if the application cant connect to the database
+                Toast.makeText(getApplicationContext(), "Error getting the service provider profile from the database!" + databaseError.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * This method populates all the fields with information from the service provider
+     * profile stored in the database. Only called when the service provider profile
+     * already exists in the database.
+     *
+     * @param profile The service providers profile
+     */
+    public void populateFields(ServiceProviderProfile profile) {
+
+        address_Text.setText(profile.getAddress());
+        phoneNumber_Text.setText(profile.getPhoneNumber());
+        companyName_Text.setText(profile.getCompanyName());
+        services=profile.getServices();
+        availability=profile.getAvailability();
+        licensed=profile.getLicensed();
+        licensed_switch.setChecked(licensed);
     }
 }

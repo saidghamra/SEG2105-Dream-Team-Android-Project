@@ -26,10 +26,16 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        // Initializing Variables
         users = new ArrayList<User>();
         passwordValid=false;
+
+        // Retrieving all the users stored in the database
+        getUsers();
 
         // Spinner
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -56,13 +62,13 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 if (username.equals("") || password.equals("")) {
 
                     // If input is invalid, display so
-                    Toast.makeText(getApplicationContext(), "Invalid input. Please make sure that none of the fields are empty!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please make sure that none of the fields are empty!", Toast.LENGTH_SHORT).show();
                 }
 
                 // If the user wants to create an admin account and the username and password fields are both not "admin", app prints so
                 else if (userType.equals("Admin") && (!(username.equals("admin") && password.equals("admin")))) {
 
-                        Toast.makeText(getApplicationContext(), "Invalid input. The admin account can have a username: admin and password: admin only!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "The admin account can have a username: admin and password: admin only!", Toast.LENGTH_SHORT).show();
                 }
 
                 // If the user the user is trying to create an account that exists, the app prints so
@@ -71,11 +77,11 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     // If input is invalid, display so
                     if (userType.equals("Admin")) {
 
-                        Toast.makeText(getApplicationContext(), "Invalid input. An admin account already exists!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "An admin account already exists!", Toast.LENGTH_SHORT).show();
                     }
                      else {
 
-                        Toast.makeText(getApplicationContext(), "Invalid input. The user already exists!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "The user already exists!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -94,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                     // Welcoming user after successful account creation
                     welcomeUser("SIGNUP");
                 }
+
                 passwordValid=false;
             }
         });
@@ -140,6 +147,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                         Toast.makeText(getApplicationContext(), "The user doesn't exist!", Toast.LENGTH_SHORT).show();
                     }
                 }
+
                 passwordValid=false;
             }
         });
@@ -180,36 +188,16 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     }
 
     /**
-     * This method reads the database and checks if the user exists in the database.
+     * This method reads the ArrayList containing all the users and checks if the
+     * user exists. It also checks if the username and password entered are valid
+     * compared to the username and password stored in the database.
+     *
      * @return true if the user exists in the database, false otherwise.
      */
     public boolean userExists() {
 
         // boolean result used to return the result
         boolean result=false;
-
-        // Connecting to the database
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                // Getting all the users in the database
-                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
-
-                    // Adding every user in the database to the ArrayList users
-                    User user = postSnapShot.getValue(User.class);
-                    users.add(user);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                // Displaying a toast if the application cant connect to the database
-                Toast.makeText(getApplicationContext(), "Error getting users list from firebase " + databaseError.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         // For loop used to access all the users stored in the ArrayList users
         for (int i=0; i<users.size();i++) {
@@ -233,6 +221,38 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         }
 
         return result;
+    }
+
+    /**
+     * This method gets all the users stored in the database.
+     */
+    public void getUsers() {
+
+        // Connecting to the database
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                // Clearing the ArrayList users
+                users.clear();
+
+                // Getting all the users in the database
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+
+                    // Adding every user in the database to the ArrayList users
+                    User user = postSnapShot.getValue(User.class);
+                    users.add(user);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                // Displaying a toast if the application cant connect to the database
+                Toast.makeText(getApplicationContext(), "Error getting users from the database!" + databaseError.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

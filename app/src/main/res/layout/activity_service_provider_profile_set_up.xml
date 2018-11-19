@@ -49,13 +49,13 @@
             android:id="@+id/add_availability"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Add Availability" />
+            android:text="Availability" />
 
         <Button
             android:id="@+id/add_services"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Add Services" />
+            android:text="Services" />
 
         <Button
             android:id="@+id/completeProfile_Button"
