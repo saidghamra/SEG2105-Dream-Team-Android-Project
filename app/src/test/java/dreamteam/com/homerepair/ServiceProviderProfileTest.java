@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class ServiceProviderProfileTest {
     @Test
     public void testServiceProviderProfileGetID() {
-        ServiceProviderProfile serviceProviderProfile = new ServiceProviderProfile("ab3f", null, null, null, false, null, null);
+        ServiceProviderProfile serviceProviderProfile = new ServiceProviderProfile("abc3f", null, null, null, false, null, null);
         assertEquals("Testing Service Provider Profile's getID", "abc3f",serviceProviderProfile.getId());
     }
     @Test
