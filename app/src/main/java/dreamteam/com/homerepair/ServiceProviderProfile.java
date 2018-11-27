@@ -5,15 +5,15 @@ import java.util.ArrayList;
 public class ServiceProviderProfile {
 
     // Instance Variables
-    private String address, phoneNumber, companyName, id;      // String object that stores the address, phone number, company name, and the id of the service provider in the database respectively
-    private boolean licensed;                                 // boolean object that is true when the service provider is licensed, false otherwise
-    private ArrayList<String> services;                      // String ArrayList containing all the services provided by the service provider
-    private ArrayList<String> availability;                 // String ArrayList containing all the availabilities of the service provider
+    private String name, address, phoneNumber, companyName, id;      // String object that stores the name, address, phone number, company name, and the id of the service provider in the database respectively
+    private boolean licensed;                                       // boolean object that is true when the service provider is licensed, false otherwise
+    private ArrayList<String> services;                            // String ArrayList containing all the services provided by the service provider
+    private ArrayList<String> availability;                       // String ArrayList containing all the availabilities of the service provider
 
     /**
      * Constructor Method
      *
-     * @param id A string containing id of the service provider in the database
+     * @param id A string containing the id of the service provider in the database
      * @param address A string containing the address of the service provider
      * @param phoneNumber A string containing the phone number of the service provider
      * @param companyName A string containing the name of the company the service provider works for
@@ -21,8 +21,9 @@ public class ServiceProviderProfile {
      * @param availability An ArrayList<String> containing the availability of the service provider
      * @param services An ArrayList<String> containing the services offered by the service provider
      */
-    public ServiceProviderProfile (String id, String address, String phoneNumber, String companyName, boolean licensed, ArrayList<String> availability, ArrayList<String> services) {
+    public ServiceProviderProfile (String id, String name, String address, String phoneNumber, String companyName, boolean licensed, ArrayList<String> availability, ArrayList<String> services) {
 
+        this.name=name;
         this.id=id;
         this.address=address;
         this.phoneNumber=phoneNumber;
@@ -40,6 +41,16 @@ public class ServiceProviderProfile {
     }
 
     // Getter and Setter Methods
+
+    /**
+     * Getter method for the name of the service provider
+     *
+     * @return A string containing the name of the service provider
+     */
+    public String getName() {
+
+        return name;
+    }
 
     /**
      * Getter method for the address of the service provider

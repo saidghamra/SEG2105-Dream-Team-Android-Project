@@ -20,7 +20,8 @@
         <activity android:name=".AdminWelcomeScreen" />
         <activity android:name=".ServiceProviderProfileSetUp" />
         <activity android:name=".ServiceProviderInformationScreen" />
-        <activity android:name=".chooseServices"></activity>
+        <activity android:name=".chooseServices" />
+        <activity android:name=".HomeOwnerChooseServiceProvider"></activity>
     </application>
 
 </manifest>

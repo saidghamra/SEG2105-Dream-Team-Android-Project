@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="Information"
             android:textColor="#000000"
-            android:textSize="30sp" />
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/editInformation_button"

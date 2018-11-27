@@ -59,7 +59,8 @@ public class ServiceProviderInformationScreen extends AppCompatActivity {
 
         // Initializing the TextView
         info = findViewById(R.id.serviceProviderInformation);
-        info.setText("Address: " + profile.getAddress()
+        info.setText("Name: " + profile.getName()
+                    + "\n\nAddress: " + profile.getAddress()
                     + "\n\nPhone Number: " + profile.getPhoneNumber()
                     + "\n\nCompany Name: " + profile.getCompanyName()
                     + "\n\nLicensed: " + profile.getLicensed()

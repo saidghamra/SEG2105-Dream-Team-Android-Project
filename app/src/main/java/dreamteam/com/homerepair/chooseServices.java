@@ -59,7 +59,6 @@ public class chooseServices extends AppCompatActivity {
 
                 // Updating the ListView to reflect the changes
                 updateListViews();
-
             }
         });
 

@@ -274,9 +274,8 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         else if (userType.equals("Home Owner")) {
 
             // Passing username and account type to WelcomeStreetActivity
-            intent = new Intent(this, WelcomeScreenActivity.class);
-            intent.putExtra("USERNAME",username);
-            intent.putExtra("ROLETYPE",userType);
+            intent = new Intent(this, HomeOwnerChooseServiceProvider.class);
+            intent.putExtra("HOMEOWNERID",id);
             startActivity(intent);
         }
 
