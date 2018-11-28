@@ -25,12 +25,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private DatabaseReference database;
     private ArrayList<String> toDisplay;
-    private String searchBy, text, homeOwnerID;
+    private String searchBy, text, homeOwnerID, time;
     private Button search_Button;
     private EditText search_EditText;
     private Spinner searchBy_Spinner;
@@ -119,8 +120,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TO IMPLEMENT
-                //showBookServiceProviderDialog();
-                showRatingDialog("");
+
+                showBookServiceProviderDialog(toDisplay.get(position));
+                //showRatingDialog("");
                 //addBooking(new Booking(homeOwnerID, id , service, t1, t2));
             }
         });
@@ -525,7 +527,11 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
     }
 
     // TO IMPLEMENT
-    public void showBookServiceProviderDialog() {
+    public void showBookServiceProviderDialog(final String clicked) {
+
+        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};    // String Array containing the apps predefined timeslots
+        final ArrayList<String> temp = new ArrayList<>();      // ArrayList of Strings that holds the time to display in the list in this dialog
+
 
         // Building the AlertDialog
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -533,14 +539,74 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         final View dialogView = inflater.inflate(R.layout.book_service_provider, null);
         dialogBuilder.setView(dialogView);
 
-        // INITIALIZE OBJECTS HERE
+        // Initializing Buttons and ListView
         final Button cancel_Button = (Button) dialogView.findViewById(R.id.cancel_button);
         final Button book_Button = (Button) dialogView.findViewById(R.id.book_button);
+        final ListView list = (ListView) dialogView.findViewById(R.id.book_list);
 
+        // If the user is searching by type of service
+        if (searchBy.equals("Type Of Service")){
 
+            // Clearing the tempo ArrayList
+            temp.clear();
 
+            // Populating the ArrayList temp with all the timeslots in the String Array timeslots
+            for (int y=0; y<timeslots.length; y++) {
 
-        dialogBuilder.setTitle("Make a Booking");
+                temp.add(timeslots[y]);
+            }
+
+            // Going through all the bookings and removing the times that the service provider the home owner pressed on in the list is not available for the specific service the home owner searched for
+            for (int x=0; x<bookings.size(); x++) {
+
+                if (bookings.get(x).getServiceProviderID().equals(findServiceProviderDatabseID(clicked)) && bookings.get(x).getService().equals(findService(text.substring(0,1).toUpperCase() + text.substring(1)))) {
+
+                    temp.remove(Integer.toString(bookings.get(x).getStartTime()) + "-" + Integer.toString(bookings.get(x).getEndTime()));
+                }
+            }
+
+            // Displaying results in the list
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,temp);
+            list.setAdapter(adapter1);
+        }
+
+        // If the user is searching by Rating
+        else if (searchBy.equals("Rating")) {
+
+            // Clearing the ArrayList temp
+            temp.clear();
+
+            // Populating the ArrayList temp with all the timeslots in the String Array timeslots
+            for (int y=0; y<timeslots.length; y++) {
+
+                temp.add(timeslots[y]);
+            }
+
+            // Going through all the bookings and removing the times that the service provider the home owner pressed on in the list is not available for the specific service the home owner clicked on in the list
+            for (int x=0; x<bookings.size(); x++) {
+
+                if (bookings.get(x).getServiceProviderID().equals(findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(",")))) && bookings.get(x).getService().equals(clicked.substring(clicked.indexOf(",")+2, clicked.length()))) {
+
+                    temp.remove(Integer.toString(bookings.get(x).getStartTime()) + "-" + Integer.toString(bookings.get(x).getEndTime()));
+                }
+            }
+
+            // Displaying results in the list
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,temp);
+            list.setAdapter(adapter1);
+        }
+
+        // If an item in the list containing all the times is pressed on
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+               storeTime(temp.get(position));
+            }
+        });
+
+        //Showing the dialog
+        dialogBuilder.setTitle("Choose time:");
         final AlertDialog b = dialogBuilder.create();
         b.show();
 
@@ -549,9 +615,25 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
+                // Creating the Booking object and adding it to the database
 
-                b.dismiss();
-                //showRatingDialog("");
+                if (searchBy.equals("Time")) {
+
+                    addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), t1, t2));
+                    b.dismiss();
+                }
+
+                else if (searchBy.equals("Type Of Service")){
+
+                    addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked), findService(text.substring(0,1).toUpperCase() + text.substring(1)), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
+                    b.dismiss();
+                }
+
+                else if (searchBy.equals("Rating")) {
+
+                    addBooking(new Booking(homeOwnerID, findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
+                    b.dismiss();
+                }
             }
         });
 
@@ -626,7 +708,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
      * the database id of the Service Provider is returned.
      *
      * @param name String containing the name of a Service Provider
-     * @return
+     * @return String containing the service provider database id if found, otherwise returns ""
      */
     public String findServiceProviderDatabseID(String name) {
 
@@ -643,5 +725,33 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         }
 
         return result;
+    }
+
+    /**
+     * This method browses through all the services stored in the database and looks
+     * for services with the name passed through to this method. IF the service is found,
+     * the string representation of the service is returned.
+     *
+     * @param find String containing the name of service
+     * @return The String representation of the service if found, "" if not found
+     */
+    public String findService (String find) {
+
+        String result = "";
+
+        for (int x=0; x<services.size(); x++) {
+
+            if (services.get(x).getName().equals(find)) {
+
+                result = services.get(x).toString();
+            }
+        }
+
+        return result;
+    }
+
+    public void storeTime(String tim) {
+
+        time = tim;
     }
 }
