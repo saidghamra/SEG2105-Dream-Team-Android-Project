@@ -123,7 +123,6 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
                 showBookServiceProviderDialog(toDisplay.get(position));
                 //showRatingDialog("");
-                //addBooking(new Booking(homeOwnerID, id , service, t1, t2));
             }
         });
     }
@@ -621,17 +620,20 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
                     addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), t1, t2));
                     b.dismiss();
+                    showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
                 }
 
                 else if (searchBy.equals("Type Of Service")){
 
                     addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked), findService(text.substring(0,1).toUpperCase() + text.substring(1)), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
+                    showRatingDialog(clicked);
                     b.dismiss();
                 }
 
                 else if (searchBy.equals("Rating")) {
 
                     addBooking(new Booking(homeOwnerID, findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
+                    showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
                     b.dismiss();
                 }
             }
