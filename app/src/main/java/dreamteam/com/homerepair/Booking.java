@@ -5,8 +5,7 @@ package dreamteam.com.homerepair;
  */
 public class Booking {
 
-    private String serviceProviderID, homeOwnerID;
-    private Service service;
+    private String serviceProviderID, homeOwnerID, service;
     private int startTime;
     private int endTime;
 
@@ -19,7 +18,7 @@ public class Booking {
      * @param startTime int containing the booking start time
      * @param endTime int containing the booking end time
      */
-    public Booking (String homeOwnerID, String serviceProviderID, Service service, int startTime, int endTime) {
+    public Booking (String homeOwnerID, String serviceProviderID, String service, int startTime, int endTime) {
 
         this.homeOwnerID=homeOwnerID;
         this.serviceProviderID=serviceProviderID;
@@ -58,9 +57,9 @@ public class Booking {
     /**
      * Getter method for the booked service
      *
-     * @return Service object containing the booked service
+     * @return String containing the booked service
      */
-    public Service getService() {
+    public String getService() {
 
         return service;
     }

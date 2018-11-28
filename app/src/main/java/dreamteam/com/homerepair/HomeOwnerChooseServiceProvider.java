@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -163,7 +164,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
     public boolean timeUnvalid() {
 
         boolean result = false;                // boolean result used to return the result
-
+        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};
         // Checking if the text inputted by the user contains a -
         if (!text.contains("-")) {
 
@@ -175,11 +176,19 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         else {
 
             try {
-
+                // Checking if the user entered the correct time format (12-9)
                 t1 = Integer.parseInt(text.substring(0,text.indexOf("-")));
                 t2 = Integer.parseInt(text.substring(text.indexOf("-")+1,text.length()));
+
+                // Checking if the user inputted one of the correct time slots
+                if (!ArrayUtils.contains(timeslots, text)) {
+
+                    result = true;
+                    Toast.makeText(getApplicationContext(), "Please limit your search to one of the following: 9-11, 11-1, 1-3, 3-5!" , Toast.LENGTH_SHORT).show();
+                }
             }
 
+            // If the user inputted something different than an int for the time part
             catch (Exception e) {
 
                 result=true;
@@ -280,6 +289,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         });
     }
 
+    /**
+     * This method gets all the bookings from the database.
+     */
     private void getBookings() {
 
         database = FirebaseDatabase.getInstance().getReference("bookings");
@@ -387,7 +399,6 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////// CHANGE NEEDED HERE
         // If the home owner wants to search by rating
         else if (searchBy.equals("Rating")) {
 
@@ -404,10 +415,17 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
                         ServiceProviderProfile profile = profiles.get(x);
 
-                        // Add the name to the ArrayList toDisplay to display it to the user
+                        // If the name is found, print the service providers name and all the services he offers
                         if (profile.getId().equals(rate.getServiceProviderId())) {
 
-                            toDisplay.add(profile.getName());
+                            // ArrayList containing all the services the service provider offers
+                            ArrayList<String> services = profile.getServices();
+
+                            for(int z=0; z<services.size(); z++) {
+
+                                // Adding the String representation to toDisplay to display it in the list
+                                toDisplay.add(profile.getName() + ", " + services.get(z));
+                            }
                         }
                     }
                 }
@@ -418,12 +436,31 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         // If the home owner wants to search by time
         else if (searchBy.equals("Time")) {
 
-            for (int i=0; i<bookings.size(); i++) {
+            //addBooking( new Booking(homeOwnerID, "-LSHdWtqqVFCp4n4zTHM", "Furniture Builder: $19", 11, 1));
 
-                Booking booking = bookings.get(i);
+            // Sort through all the bookings
+            for (int i=0; i<profiles.size(); i++) {
 
-                //if (booking.getStartTime() && booking.getEndTime())
+                ServiceProviderProfile profile = profiles.get(i);
 
+                for (int y=0; y<profile.getServices().size(); y++) {
+
+                    for (int x = 0; x < bookings.size(); x++) {
+
+                        Booking booking = bookings.get(x);
+
+                        //!(profile.getId().equals(booking.getServiceProviderID())) &&
+                        if (t1 != booking.getStartTime() && t2 != booking.getEndTime()
+                                && !(profile.getServices().get(y).equals(booking.getService()))) {
+
+                            if (!(profile.getId().equals(booking.getServiceProviderID()))) {
+
+                            }
+
+                            toDisplay.add(profile.getName() + ", " + profile.getServices().get(y));
+                        }
+                    }
+                }
             }
         }
 
