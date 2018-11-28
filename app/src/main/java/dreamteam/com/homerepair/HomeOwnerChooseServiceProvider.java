@@ -115,8 +115,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         displaySearchResults_List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //showBookingDialog();
+                // TO IMPLEMENT
+                showBookServiceProviderDialog();
+                showRatingDialog();
                 //addBooking(new Booking(homeOwnerID, id , service, t1, t2));
             }
         });
@@ -432,32 +433,31 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////////////// CHANGE NEEDED HERE
         // If the home owner wants to search by time
         else if (searchBy.equals("Time")) {
 
-            //addBooking( new Booking(homeOwnerID, "-LSHdWtqqVFCp4n4zTHM", "Furniture Builder: $19", 11, 1));
-
-            // Sort through all the bookings
+            // Go through all the service provider profiles
             for (int i=0; i<profiles.size(); i++) {
 
+                // Initializing the current profile
                 ServiceProviderProfile profile = profiles.get(i);
 
-                for (int y=0; y<profile.getServices().size(); y++) {
+                // Initializing the current service provider services
+                ArrayList<String> services = profile.getServices();
 
+                // Go through all the services the current service provider offers
+                for (int y=0; y<services.size(); y++) {
+
+                    // Go through all the bookings stored in the databased
                     for (int x = 0; x < bookings.size(); x++) {
 
+                        // Initializing the current booking
                         Booking booking = bookings.get(x);
 
-                        //!(profile.getId().equals(booking.getServiceProviderID())) &&
-                        if (t1 != booking.getStartTime() && t2 != booking.getEndTime()
-                                && !(profile.getServices().get(y).equals(booking.getService()))) {
+                        // Checking current statement, if true, add the service provider name and service offered during the time specified by the user to the list
+                        if (!(t1 == booking.getStartTime() && t2 == booking.getEndTime() && profile.getId().equals(booking.getServiceProviderID()) && booking.getService().equals(services.get(y)))) {
 
-                            if (!(profile.getId().equals(booking.getServiceProviderID()))) {
-
-                            }
-
-                            toDisplay.add(profile.getName() + ", " + profile.getServices().get(y));
+                            toDisplay.add(profile.getName() + ", " + services.get(y));
                         }
                     }
                 }
@@ -519,5 +519,17 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         database.child(id).setValue(booking);
 
         Toast.makeText(getApplicationContext(), "Booking created!", Toast.LENGTH_SHORT).show();
+    }
+
+    // TO IMPLEMENT
+    public void showBookServiceProviderDialog() {
+
+        // XML LAYOUT ALREADY EXISTS CALLED book_service_provider
+    }
+
+    // TO IMPLEMENT
+    public void showRatingDialog() {
+
+        // XML LAYOUT ALREADY EXISTS CALLED rate_service_provider
     }
 }
