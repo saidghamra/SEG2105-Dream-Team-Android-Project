@@ -119,7 +119,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TO IMPLEMENT
-                showBookServiceProviderDialog();
+                //showBookServiceProviderDialog();
                 showRatingDialog("");
                 //addBooking(new Booking(homeOwnerID, id , service, t1, t2));
             }
@@ -534,8 +534,8 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         dialogBuilder.setView(dialogView);
 
         // INITIALIZE OBJECTS HERE
-        final Button cancel_Button = (Button) findViewById(R.id.cancel_button);
-        final Button book_Button = (Button) findViewById(R.id.book_button);
+        final Button cancel_Button = (Button) dialogView.findViewById(R.id.cancel_button);
+        final Button book_Button = (Button) dialogView.findViewById(R.id.book_button);
 
 
 
@@ -582,9 +582,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         dialogBuilder.setView(dialogView);
 
         // Setting up Button, EditText, and RatingBar
-        final RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_rating_bar);
-        final Button submit_Button = (Button) findViewById(R.id.submit_button);
-        final EditText review_EditText = (EditText) findViewById(R.id.review);
+        final RatingBar ratingBar = (RatingBar) dialogView.findViewById(R.id.rating_rating_bar);
+        final Button submit_Button = (Button) dialogView.findViewById(R.id.submit_Rate_Button);
+        final EditText review_EditText = (EditText) dialogView.findViewById(R.id.review);
 
         dialogBuilder.setTitle("Rate Service");
         final AlertDialog b = dialogBuilder.create();
@@ -604,7 +604,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
                 }
 
                 // If the user doesn't rate the Service Provider
-                else if (ratingBar.getNumStars()==0) {
+                else if (ratingBar.getRating()==0) {
 
                     Toast.makeText(getApplicationContext(), "Please rate the Service Provider!", Toast.LENGTH_SHORT).show();
                 }
@@ -612,11 +612,10 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
                 // All validations pass
                 else {
 
-                    addRate(new Rate(findServiceProviderDatabseID(name), ratingBar.getNumStars(), review));
+                    addRate(new Rate(findServiceProviderDatabseID(name), Math.round(ratingBar.getRating()), review));
                     Toast.makeText(getApplicationContext(), "Rate submitted!", Toast.LENGTH_SHORT).show();
+                    b.dismiss();
                 }
-
-                b.dismiss();
             }
         });
     }
