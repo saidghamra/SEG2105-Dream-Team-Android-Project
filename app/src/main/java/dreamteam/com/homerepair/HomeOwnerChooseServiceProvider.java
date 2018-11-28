@@ -2,14 +2,17 @@ package dreamteam.com.homerepair;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +61,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         Intent intent = new Intent();
         homeOwnerID = intent.getStringExtra("HOMEOWNERID");
 
-        // Initializing Buttons, EditTexts, Spinner, and ListView
+        // Initializing Buttons, EditTexts, Spinner, RatingBar, and ListView
         search_Button = (Button) findViewById(R.id.search_button);
         search_EditText = (EditText) findViewById(R.id.searchResults_EditText);
         displaySearchResults_List = findViewById(R.id.display_services);
@@ -117,7 +120,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TO IMPLEMENT
                 showBookServiceProviderDialog();
-                showRatingDialog();
+                showRatingDialog("");
                 //addBooking(new Booking(homeOwnerID, id , service, t1, t2));
             }
         });
@@ -164,8 +167,8 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
      */
     public boolean timeUnvalid() {
 
-        boolean result = false;                // boolean result used to return the result
-        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};
+        boolean result = false;                                         // boolean result used to return the result
+        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};           // String array containing predefined time slots
         // Checking if the text inputted by the user contains a -
         if (!text.contains("-")) {
 
@@ -524,12 +527,122 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
     // TO IMPLEMENT
     public void showBookServiceProviderDialog() {
 
-        // XML LAYOUT ALREADY EXISTS CALLED book_service_provider
+        // Building the AlertDialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.book_service_provider, null);
+        dialogBuilder.setView(dialogView);
+
+        // INITIALIZE OBJECTS HERE
+        final Button cancel_Button = (Button) findViewById(R.id.cancel_button);
+        final Button book_Button = (Button) findViewById(R.id.book_button);
+
+
+
+
+        dialogBuilder.setTitle("Make a Booking");
+        final AlertDialog b = dialogBuilder.create();
+        b.show();
+
+        // If the book button is pressed
+        book_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                b.dismiss();
+                //showRatingDialog("");
+            }
+        });
+
+        // If the cancel button is pressed
+        cancel_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                b.dismiss();
+            }
+        });
     }
 
-    // TO IMPLEMENT
-    public void showRatingDialog() {
+    /**
+     * This method is responsible for building the dialog that pops up whenever
+     * a home owner finishes booking an appointment with a service provider. It
+     * allows the user to rate the service provider by asking for a rating out of 5
+     * and a comment.
+     *
+     * @param name A string containing the name of the Service Provider the Home Owner booked the appointment with
+     */
+    public void showRatingDialog(final String name) {
 
-        // XML LAYOUT ALREADY EXISTS CALLED rate_service_provider
+        // Building the AlertDialog
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.rate_service_provider, null);
+        dialogBuilder.setView(dialogView);
+
+        // Setting up Button, EditText, and RatingBar
+        final RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_rating_bar);
+        final Button submit_Button = (Button) findViewById(R.id.submit_button);
+        final EditText review_EditText = (EditText) findViewById(R.id.review);
+
+        dialogBuilder.setTitle("Rate Service");
+        final AlertDialog b = dialogBuilder.create();
+        b.show();
+
+        // If the Submit button is clicked
+        submit_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String review = review_EditText.getText().toString().trim();
+
+                // If the user doesn't write anything in the review edit text
+                if (review.equals("")) {
+
+                    Toast.makeText(getApplicationContext(), "Please make sure the review field is filled!", Toast.LENGTH_SHORT).show();
+                }
+
+                // If the user doesn't rate the Service Provider
+                else if (ratingBar.getNumStars()==0) {
+
+                    Toast.makeText(getApplicationContext(), "Please rate the Service Provider!", Toast.LENGTH_SHORT).show();
+                }
+
+                // All validations pass
+                else {
+
+                    addRate(new Rate(findServiceProviderDatabseID(name), ratingBar.getNumStars(), review));
+                    Toast.makeText(getApplicationContext(), "Rate submitted!", Toast.LENGTH_SHORT).show();
+                }
+
+                b.dismiss();
+            }
+        });
+    }
+
+    /**
+     * This method browses through all the Service Provider Profiles Stored
+     * in the database and looks for a specific name. If the name is found,
+     * the database id of the Service Provider is returned.
+     *
+     * @param name String containing the name of a Service Provider
+     * @return
+     */
+    public String findServiceProviderDatabseID(String name) {
+
+        // Used to return the Service Provider Database ID
+        String result = "";
+
+        // Looking through all the Service Provider Profiles stored in the database and seeing if any name matches
+        for (int x=0; x< profiles.size(); x++) {
+
+            if (profiles.get(x).getName().equals(name)) {
+
+                result = profiles.get(x).getId();
+            }
+        }
+
+        return result;
     }
 }

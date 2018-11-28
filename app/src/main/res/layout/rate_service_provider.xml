@@ -14,23 +14,24 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
         android:numStars="5"
-        android:stepSize=".5" />
+        android:rating="0"
+        android:stepSize="1" />
 
     <EditText
-        android:id="@+id/Review"
-        android:layout_width="match_parent"
+        android:id="@+id/review"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Type your review here"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="145dp"
+        android:ems="10"
+        android:hint="Type your review here"
         android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Review"
+        android:layout_below="@+id/review"
         android:layout_centerHorizontal="true"
         android:text="Submit" />
 
