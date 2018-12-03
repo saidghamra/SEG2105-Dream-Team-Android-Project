@@ -8,6 +8,7 @@ import android.view.*;
 import android.widget.*;
 import com.google.firebase.database.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
@@ -212,11 +213,19 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         // For loop used to access all the users stored in the ArrayList users
         for (int i=0; i<users.size();i++) {
 
-            if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(password)) {
+            try{
 
-                passwordValid=true;
-                id=users.get(i).getId();
-                break;
+                if (users.get(i).getUsername().equals(username) && users.get(i).getPassword().equals(Sha1.hash(password))) {
+
+                    passwordValid=true;
+                    id=users.get(i).getId();
+                    break;
+                }
+            }
+
+            catch (UnsupportedEncodingException e) {
+
+                Toast.makeText(getApplicationContext(), "Can't hash your password!", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -257,7 +266,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
     /**
      * This method is called when the fields are validated in order to move to WelcomeScreenActivity, AdminWelcomeScreen,
-     * ServiceProviderProfileSetup, or ServiceProviderInformationScreen screens.
+     * ServiceProviderProfileSetup, ServiceProviderInformationScreen, or HomeOwnerChoosesServiceProvider screens.
      *
      * @param type String variable used to determine whether a user is signing up or signing in
      */
@@ -308,9 +317,16 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
         id = databaseReference.push().getKey();
 
-        // Creating a User object to add to the database
-        User user =  new User(id,userType,username,password);
+        try {
 
-        databaseReference.child(id).setValue(user);
+            // Creating a User object to add to the database
+            User user =  new User(id,userType,username,Sha1.hash(password));
+            databaseReference.child(id).setValue(user);
+        }
+
+        catch (UnsupportedEncodingException e) {
+
+            Toast.makeText(getApplicationContext(), "Can't hash your password!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
