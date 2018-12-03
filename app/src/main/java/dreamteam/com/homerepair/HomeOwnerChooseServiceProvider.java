@@ -29,20 +29,20 @@ import java.util.List;
 
 public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private DatabaseReference database;
-    private ArrayList<String> toDisplay;
-    private String searchBy, text, homeOwnerID, time;
-    private Button search_Button;
-    private EditText search_EditText;
-    private Spinner searchBy_Spinner;
-    private ListView displaySearchResults_List;
-    private String[] searchParameters = {"Type Of Service", "Time", "Rating"};
-    private ArrayList<Service> services;
-    private ArrayList<Rate> rates;
-    private ArrayList<Booking> bookings;
-    private ArrayList<ServiceProviderProfile> profiles;
-    private TextView view;
-    private int t1,t2;
+    private DatabaseReference database;                                                                    // Stores a DatabaseReference object for FireBase use.
+    private ArrayList<String> toDisplay;                                                                  // Holds a list of Strings to be displayed to the home owner in the list
+    private String searchBy, text, homeOwnerID, time, day;                                               // String containing the type of search the home owner wants to perform, what the home owner enters in the search bar, the database id of the home owner, the time and the day the home owner wants to book a service provider
+    private Button search_Button;                                                                       // Stores a Button Object that when clicked displays the search results of the home owner
+    private EditText search_EditText;                                                                  // Stores an EditText Object where the home owner enters his search text
+    private Spinner searchBy_Spinner;                                                                 // Stores a Spinner Object that allows the home owner to choose what he'd like to search by (Time, Rating, Type Of Service)
+    private ListView displaySearchResults_List;                                                      // Stores a ListView Object that is used to display the search results to the home owner based on his search
+    private String[] searchParameters = {"Type Of Service", "Time", "Rating"};                      // String Array containing the search types
+    private ArrayList<Service> services;                                                           // ArrayList used to store all the services contained in the database
+    private ArrayList<Rate> rates;                                                                // ArrayList used to store all the rates contained in the database
+    private ArrayList<Booking> bookings;                                                         // ArrayList used to store all the bookings contained in the database
+    private ArrayList<ServiceProviderProfile> profiles;                                         // ArrayList used to store all the service provider profiles contained in the database
+    private TextView view;                                                                     // Stores a TextView Object that changes based on the search results
+    private int t1, t2;                                                                       // int that contain the search start time and search end time according to what was inputted in the search bar by the homeowner
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         rates = new ArrayList<>();
         profiles = new ArrayList<>();
         bookings = new ArrayList<>();
-        searchBy = "";
+        searchBy = time = day = "";
 
-        // Getting the home owner databse id from the previous activity
+        // Getting the home owner database id from the previous activity
         Intent intent = new Intent();
         homeOwnerID = intent.getStringExtra("HOMEOWNERID");
 
@@ -119,10 +119,8 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         displaySearchResults_List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TO IMPLEMENT
 
                 showBookServiceProviderDialog(toDisplay.get(position));
-                //showRatingDialog("");
             }
         });
     }
@@ -141,9 +139,9 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         // Trying to parse the String text to check if its an integer or not
         try {
 
-            int test = Integer.parseInt(text);
+            int rate = Integer.parseInt(text);
 
-            if (test>5) {
+            if (rate>5) {
 
                 Toast.makeText(getApplicationContext(), "Please enter an integer rating less than or equal to five!" , Toast.LENGTH_SHORT).show();
                 result = true;
@@ -162,43 +160,42 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
     /**
      *  This method checks whether the time entered by the user in the EditText field
-     *  matches a 9-2 or 12-9 format.
+     *  matches a 'friday 9-11' format.
      *
      * @return true if the time is invalid, false otherwise
      */
     public boolean timeUnvalid() {
 
-        boolean result = false;                                         // boolean result used to return the result
-        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};           // String array containing predefined time slots
-        // Checking if the text inputted by the user contains a -
-        if (!text.contains("-")) {
+        boolean result = false;                                                                                     // boolean result used to return the result
+        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};                                                       // String array containing predefined time slots
+        String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};           // String array containing days of the week
 
-            result = true;
-            Toast.makeText(getApplicationContext(), "Please make sure to enter a time in the format 9-12 or 12-9!" , Toast.LENGTH_SHORT).show();
-        }
+        try {
 
-        // Checking if the user entered the correct time format (12-9)
-        else {
+            day = text.substring(0, text.indexOf(" ")).toLowerCase();
+            t1 = Integer.parseInt(text.substring(text.indexOf(" ")+1, text.indexOf("-")));
+            t2 = Integer.parseInt(text.substring(text.indexOf("-")+1,text.length()));
 
-            try {
-                // Checking if the user entered the correct time format (12-9)
-                t1 = Integer.parseInt(text.substring(0,text.indexOf("-")));
-                t2 = Integer.parseInt(text.substring(text.indexOf("-")+1,text.length()));
+            // Checking if the user is searching according to the predefined timeslots
+            if (!ArrayUtils.contains(timeslots, text.substring(text.indexOf(" ")+1,text.length()))) {
 
-                // Checking if the user inputted one of the correct time slots
-                if (!ArrayUtils.contains(timeslots, text)) {
-
-                    result = true;
-                    Toast.makeText(getApplicationContext(), "Please limit your search to one of the following: 9-11, 11-1, 1-3, 3-5!" , Toast.LENGTH_SHORT).show();
-                }
+                result = true;
+                Toast.makeText(getApplicationContext(), "Please limit your search to one of the following timeslots: 9-11, 11-1, 1-3, 3-5" , Toast.LENGTH_SHORT).show();
             }
 
-            // If the user inputted something different than an int for the time part
-            catch (Exception e) {
+            // Checking if the user is searching by days of the week (as defined in String[] days)
+            if (!ArrayUtils.contains(days, day)) {
 
                 result=true;
-                Toast.makeText(getApplicationContext(), "Please make sure to enter a time in the format 9-12 or 12-9!" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please add the day of the week: friday 9-11" , Toast.LENGTH_SHORT).show();
             }
+        }
+
+        // If the user inputted something different than an int for the time section
+        catch (Exception e) {
+
+            result=true;
+            Toast.makeText(getApplicationContext(), "Please search using the format: friday 9-12" , Toast.LENGTH_SHORT).show();
         }
 
         return result;
@@ -429,7 +426,10 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
                             for(int z=0; z<services.size(); z++) {
 
                                 // Adding the String representation to toDisplay to display it in the list
-                                toDisplay.add(profile.getName() + ", " + services.get(z));
+                                if (!toDisplay.contains(profile.getName() + ", " + services.get(z))){
+
+                                    toDisplay.add(profile.getName() + ", " + services.get(z));
+                                }
                             }
                         }
                     }
@@ -441,28 +441,33 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         else if (searchBy.equals("Time")) {
 
             // Go through all the service provider profiles
-            for (int i=0; i<profiles.size(); i++) {
+            for (int x=0; x<profiles.size(); x++) {
 
-                // Initializing the current profile
-                ServiceProviderProfile profile = profiles.get(i);
-
-                // Initializing the current service provider services
+                ServiceProviderProfile profile = profiles.get(x);
                 ArrayList<String> services = profile.getServices();
 
-                // Go through all the services the current service provider offers
+                // Go through all the services offered by the service provider
                 for (int y=0; y<services.size(); y++) {
 
-                    // Go through all the bookings stored in the databased
-                    for (int x = 0; x < bookings.size(); x++) {
+                    // Add the name of the service provider and every service he offers to toDisplay
+                    toDisplay.add(profile.getName() + ", " + services.get(y));
+                }
+            }
 
-                        // Initializing the current booking
-                        Booking booking = bookings.get(x);
+            // Go through all the bookings
+            for (int i=0; i<bookings.size(); i++) {
 
-                        // Checking current statement, if true, add the service provider name and service offered during the time specified by the user to the list
-                        if (!(t1 == booking.getStartTime() && t2 == booking.getEndTime() && profile.getId().equals(booking.getServiceProviderID()) && booking.getService().equals(services.get(y)))) {
+                Booking booking = bookings.get(i);
 
-                            toDisplay.add(profile.getName() + ", " + services.get(y));
-                        }
+                // Go through all the service provider profiles
+                for (int x=0; x<profiles.size(); x++) {
+
+                    ServiceProviderProfile profile = profiles.get(x);
+
+                    // Remove the service offered by the service provider from toDisplay if the service for the time interval the user specified is booked
+                    if (booking.getServiceProviderID().equals(profile.getId()) && t1==booking.getStartTime() && t2==booking.getEndTime() && booking.getDay().equals(day)) {
+
+                        toDisplay.remove(profile.getName() + ", " + booking.getService());
                     }
                 }
             }
@@ -525,11 +530,19 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         Toast.makeText(getApplicationContext(), "Booking created!", Toast.LENGTH_SHORT).show();
     }
 
-    // TO IMPLEMENT
+    /**
+     * This method is responsible for building the dialog that pops up whenever
+     * a home owner clickes a service provider in the list and is ready to book a service.
+     * It allows the home owner to book a service with a service provider by choosing the
+     * time and day.
+     *
+     * @param clicked String containing what was clicked in the list containing the search results
+     */
     public void showBookServiceProviderDialog(final String clicked) {
 
-        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};    // String Array containing the apps predefined timeslots
-        final ArrayList<String> temp = new ArrayList<>();      // ArrayList of Strings that holds the time to display in the list in this dialog
+        String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};                                                       // String array containing predefined time slots
+        String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};           // String array containing days of the week
+        final ArrayList<String> temp = new ArrayList<>();                                                        // ArrayList of Strings that holds the time to display in the list in this dialog
 
 
         // Building the AlertDialog
@@ -546,21 +559,26 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         // If the user is searching by type of service
         if (searchBy.equals("Type Of Service")){
 
-            // Clearing the tempo ArrayList
+            // Clearing the ArrayList temp
             temp.clear();
 
-            // Populating the ArrayList temp with all the timeslots in the String Array timeslots
-            for (int y=0; y<timeslots.length; y++) {
+            // Populating the ArrayList temp with all the timeslots and days
+            for (int y=0; y<days.length; y++) {
 
-                temp.add(timeslots[y]);
+                for (int x=0; x<timeslots.length; x++) {
+
+                    temp.add(days[y] + " " + timeslots[x]);
+                }
             }
 
             // Going through all the bookings and removing the times that the service provider the home owner pressed on in the list is not available for the specific service the home owner searched for
             for (int x=0; x<bookings.size(); x++) {
 
-                if (bookings.get(x).getServiceProviderID().equals(findServiceProviderDatabseID(clicked)) && bookings.get(x).getService().equals(findService(text.substring(0,1).toUpperCase() + text.substring(1)))) {
+                Booking booking = bookings.get(x);
 
-                    temp.remove(Integer.toString(bookings.get(x).getStartTime()) + "-" + Integer.toString(bookings.get(x).getEndTime()));
+                if (booking.getServiceProviderID().equals(findServiceProviderDatabseID(clicked)) && booking.getService().equals(findService(text.substring(0,1).toUpperCase() + text.substring(1)))) {
+
+                    temp.remove(booking.getDay() + " " + Integer.toString(booking.getStartTime()) + "-" + Integer.toString(booking.getEndTime()));
                 }
             }
 
@@ -575,18 +593,23 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             // Clearing the ArrayList temp
             temp.clear();
 
-            // Populating the ArrayList temp with all the timeslots in the String Array timeslots
-            for (int y=0; y<timeslots.length; y++) {
+            // Populating the ArrayList temp with all the timeslots and days
+            for (int y=0; y<days.length; y++) {
 
-                temp.add(timeslots[y]);
+                for (int x=0; x<timeslots.length; x++) {
+
+                    temp.add(days[y] + " " + timeslots[x]);
+                }
             }
 
             // Going through all the bookings and removing the times that the service provider the home owner pressed on in the list is not available for the specific service the home owner clicked on in the list
             for (int x=0; x<bookings.size(); x++) {
 
-                if (bookings.get(x).getServiceProviderID().equals(findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(",")))) && bookings.get(x).getService().equals(clicked.substring(clicked.indexOf(",")+2, clicked.length()))) {
+                Booking booking = bookings.get(x);
 
-                    temp.remove(Integer.toString(bookings.get(x).getStartTime()) + "-" + Integer.toString(bookings.get(x).getEndTime()));
+                if (booking.getServiceProviderID().equals(findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(",")))) && booking.getService().equals(clicked.substring(clicked.indexOf(",")+2, clicked.length()))) {
+
+                    temp.remove(booking.getDay() + " " + Integer.toString(bookings.get(x).getStartTime()) + "-" + Integer.toString(bookings.get(x).getEndTime()));
                 }
             }
 
@@ -616,25 +639,39 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
                 // Creating the Booking object and adding it to the database
 
-                if (searchBy.equals("Time")) {
+                // If the user doesn't select a time slot in the list when the book button is pressed if the user is searching by Rating or Type Of Service
+                if (time.equals("") && (searchBy.equals("Type Of Service") || searchBy.equals("Rating"))) {
 
-                    addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), t1, t2));
-                    b.dismiss();
-                    showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
+                    Toast.makeText(getApplicationContext(), "Please click on an item in the list to book!", Toast.LENGTH_SHORT).show();
                 }
 
-                else if (searchBy.equals("Type Of Service")){
+                else {
 
-                    addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked), findService(text.substring(0,1).toUpperCase() + text.substring(1)), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
-                    showRatingDialog(clicked);
-                    b.dismiss();
-                }
+                    if (searchBy.equals("Time")) {
 
-                else if (searchBy.equals("Rating")) {
+                        addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), day, t1, t2));
+                        b.dismiss();
+                        showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
+                    }
 
-                    addBooking(new Booking(homeOwnerID, findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), Integer.parseInt(time.substring(0,1)), Integer.parseInt(time.substring(2))));
-                    showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
-                    b.dismiss();
+                    else if (searchBy.equals("Type Of Service")){
+
+                        addBooking(new Booking(homeOwnerID,findServiceProviderDatabseID(clicked), findService(text),time.substring(0, time.indexOf(" ")), Integer.parseInt(time.substring(time.indexOf(" ")+1,
+                                time.indexOf("-"))), Integer.parseInt(time.substring(time.indexOf("-")+1,time.length()))));
+                        showRatingDialog(clicked);
+                        b.dismiss();
+                    }
+
+                    else if (searchBy.equals("Rating")) {
+
+                        addBooking(new Booking(homeOwnerID, findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))), clicked.substring(clicked.indexOf(",")+2, clicked.length()), time.substring(0, time.indexOf(" ")),
+                                Integer.parseInt(time.substring(time.indexOf(" ")+1, time.indexOf("-"))), Integer.parseInt(time.substring(time.indexOf("-")+1,time.length()))));
+                        showRatingDialog(clicked.substring(0, clicked.indexOf(",")));
+                        b.dismiss();
+                    }
+
+                    // Resetting time
+                    time = "";
                 }
             }
         });
@@ -743,7 +780,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
 
         for (int x=0; x<services.size(); x++) {
 
-            if (services.get(x).getName().equals(find)) {
+            if (services.get(x).getName().toLowerCase().equals(find.toLowerCase())) {
 
                 result = services.get(x).toString();
             }
@@ -752,6 +789,11 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
         return result;
     }
 
+    /**
+     * This method saves the time.
+     *
+     * @param tim String containing time to be saved
+     */
     public void storeTime(String tim) {
 
         time = tim;

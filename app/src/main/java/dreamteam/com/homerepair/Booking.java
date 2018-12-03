@@ -5,7 +5,7 @@ package dreamteam.com.homerepair;
  */
 public class Booking {
 
-    private String serviceProviderID, homeOwnerID, service;
+    private String serviceProviderID, homeOwnerID, service, day;
     private int startTime;
     private int endTime;
 
@@ -15,14 +15,16 @@ public class Booking {
      * @param homeOwnerID String containing the home owner databse id
      * @param serviceProviderID String containing the service provider database id
      * @param service Service object containing the booked service
+     * @param day String containing the booking day of the week
      * @param startTime int containing the booking start time
      * @param endTime int containing the booking end time
      */
-    public Booking (String homeOwnerID, String serviceProviderID, String service, int startTime, int endTime) {
+    public Booking (String homeOwnerID, String serviceProviderID, String service, String day, int startTime, int endTime) {
 
         this.homeOwnerID=homeOwnerID;
         this.serviceProviderID=serviceProviderID;
         this.service=service;
+        this.day=day;
         this.startTime=startTime;
         this.endTime=endTime;
     }
@@ -62,6 +64,16 @@ public class Booking {
     public String getService() {
 
         return service;
+    }
+
+    /**
+     * Getter method for the booking day of the week
+     *
+     * @return String containing the booking day of the week
+     */
+    public String getDay() {
+
+        return day;
     }
 
     /**
