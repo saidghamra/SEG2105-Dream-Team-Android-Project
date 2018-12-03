@@ -454,6 +454,23 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
                 }
             }
 
+            // Go through all the service provider profiles
+            for (int y=0; y<profiles.size(); y++){
+
+                ServiceProviderProfile profile = profiles.get(y);
+                ArrayList<String> availabilities = profile.getAvailability();
+                ArrayList<String> services = profile.getServices();
+
+                // If the service provider is not available on the day the home owner is searching for remove all his services
+                if (!availabilities.contains(text.substring(0, text.indexOf(" ")).substring(0,1).toUpperCase() + text.substring(0, text.indexOf(" ")).substring(1,text.indexOf(" ")) + " 9-5")) {
+
+                    for (int x=0; x<services.size(); x++) {
+
+                        toDisplay.remove(profile.getName() + ", " + services.get(x));
+                    }
+                }
+            }
+
             // Go through all the bookings
             for (int i=0; i<bookings.size(); i++) {
 
@@ -465,7 +482,7 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
                     ServiceProviderProfile profile = profiles.get(x);
 
                     // Remove the service offered by the service provider from toDisplay if the service for the time interval the user specified is booked
-                    if (booking.getServiceProviderID().equals(profile.getId()) && t1==booking.getStartTime() && t2==booking.getEndTime() && booking.getDay().equals(day)) {
+                    if (booking.getServiceProviderID().equals(profile.getId()) && t1==booking.getStartTime() && t2==booking.getEndTime() && booking.getDay().equals(day.substring(0,1).toUpperCase() + day.substring(1,day.length()))) {
 
                         toDisplay.remove(profile.getName() + ", " + booking.getService());
                     }
@@ -541,7 +558,6 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
     public void showBookServiceProviderDialog(final String clicked) {
 
         String[] timeslots = {"9-11", "11-1", "1-3", "3-5"};                                                       // String array containing predefined time slots
-        String[] days = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};           // String array containing days of the week
         final ArrayList<String> temp = new ArrayList<>();                                                        // ArrayList of Strings that holds the time to display in the list in this dialog
 
 
@@ -562,12 +578,28 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             // Clearing the ArrayList temp
             temp.clear();
 
-            // Populating the ArrayList temp with all the timeslots and days
-            for (int y=0; y<days.length; y++) {
+            // Adding the days and timeslots the service provider is available on
+            // Going through all the servie provider profiles
+            for (int i=0; i<profiles.size(); i++) {
 
-                for (int x=0; x<timeslots.length; x++) {
+                ServiceProviderProfile profile = profiles.get(i);
+                ArrayList<String> availabilities = profile.getAvailability();
 
-                    temp.add(days[y] + " " + timeslots[x]);
+                // If the service provider profile the home owner clicked on is the one we're looking at right now
+                if (profile.getId().equals(findServiceProviderDatabseID(clicked))) {
+
+                    // Go through the service provider availabilities
+                    for (int x=0; x<availabilities.size(); x++) {
+
+                        // Getting the day of the week
+                        String availability = availabilities.get(x).substring(0, availabilities.get(x).indexOf(" "));
+
+                        // Going through all the available timeslots
+                        for (int y=0; y<timeslots.length; y++) {
+
+                            temp.add(availability + " " + timeslots[y]);
+                        }
+                    }
                 }
             }
 
@@ -593,12 +625,28 @@ public class HomeOwnerChooseServiceProvider extends AppCompatActivity implements
             // Clearing the ArrayList temp
             temp.clear();
 
-            // Populating the ArrayList temp with all the timeslots and days
-            for (int y=0; y<days.length; y++) {
+            // Adding the days and timeslots the service provider is available on
+            // Going through all the servie provider profiles
+            for (int i=0; i<profiles.size(); i++) {
 
-                for (int x=0; x<timeslots.length; x++) {
+                ServiceProviderProfile profile = profiles.get(i);
+                ArrayList<String> availabilities = profile.getAvailability();
 
-                    temp.add(days[y] + " " + timeslots[x]);
+                // If the service provider profile the home owner clicked on is the one we're looking at right now
+                if (profile.getId().equals(findServiceProviderDatabseID(clicked.substring(0, clicked.indexOf(","))))) {
+
+                    // Go through the service provider availabilities
+                    for (int x=0; x<availabilities.size(); x++) {
+
+                        // Getting the day of the week
+                        String availability = availabilities.get(x).substring(0, availabilities.get(x).indexOf(" "));
+
+                        // Going through all the available timeslots
+                        for (int y=0; y<timeslots.length; y++) {
+
+                            temp.add(availability + " " + timeslots[y]);
+                        }
+                    }
                 }
             }
 
