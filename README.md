@@ -16,7 +16,7 @@ services and book a provider.
 
 The creation of this project engaged us in the Software Engineering practices we
 learned in class. We also were able to apply our theoretical knowledge to something
-more practical. Firstly, it taught us how to create UML diagrams and implement a design
+more practical and taught us how to create UML diagrams and implement a design
 based on the diagram. The building of this app was also a great opportunity to work in a
 team and practice the Agile Software Development approach.
 
