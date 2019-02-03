@@ -4,7 +4,7 @@ Build Status <br />
 [![CircleCI](https://circleci.com/gh/saidghamra/SEG2105-Dream-Team-Android-Project/tree/master.svg?style=svg&circle-token=a5a8e4e9ea6ded04e733d15988e57c1bf77b612b)](https://circleci.com/gh/saidghamra/SEG2105-Dream-Team-Android-Project/tree/master)
 
 
-During this semester, we were tasked to make a group of 3-5 students and create an
+During the 2018 Fall semester, we were tasked to make a group of 3-5 students and create an
 On-Demand Home Repair Services application using Android Studio. 
 
 While making the app, students were told to focus on three main users which are the administrator, 
