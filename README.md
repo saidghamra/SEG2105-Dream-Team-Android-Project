@@ -23,3 +23,5 @@ team and practice the Agile Software Development approach.
 Overall, we found that this project was very interesting and challenging, especially
 since most of us have never dabbled with app development before. Nevertheless, we
 pulled through and met all criteria including the bonuses.
+
+![Alt text](53305487_2232835750288866_7028104236281888768_n.png?raw=true "Title")
